@@ -25,6 +25,10 @@ app.use( express.static( path.join(__dirname, 'public') ) );
 console.log( "__dirname : " + __dirname );
 console.log( "__dirname : " + path.join(__dirname, 'public') );
 
+app.get('/api', function(){
+	res.send( [{name:'wine'},{name:'bear'}] );
+});
+
 //http network with controller.js
 // app.get('/index.html', function(req, res){
 // 	console.log("I received a GET request");

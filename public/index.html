@@ -1,10 +1,40 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title> HTML & CSS STUDY </title>
+	<title> Lunch Project </title>
 </head>
 <body>
 	<h1> This is index.html in public folder. </h1>
+	<button id="post"> post test </button>
 	
+<script type="text/javascript" src="libs/jquery/jquery-2.1.1.min.js"></script>
+<script type="text/javascript" src="javascripts/LunchNetwork.js"></script>
+<script type="text/javascript" src="javascripts/controller.js"></script>
+<script type="text/javascript">
+	
+
+	var data ={
+		IDX : 4
+	};
+
+	function click(){
+		console.log( 'click');
+		console.log( data );
+		// post test
+		_lunchNetwork.ajax( 'POST', 'new_restaurant', data, function( result ){
+			console.log( result );
+		});		
+	}	
+	document.getElementById("post").addEventListener( 'click', click );
+
+	console.log( data );
+	_lunchNetwork.ajax( 'GET', 'restaurant_list', data, function( result ){
+		console.log( ' result : ' );
+		console.log( result );
+	});
+	console.log( _selectedLunchList );
+	
+</script>
+
 </body>
 </html>
