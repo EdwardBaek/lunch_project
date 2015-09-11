@@ -2,10 +2,27 @@
 <html>
 <head>
 	<title> Lunch Project </title>
+	<link rel="stylesheet" href="/libs/bootstrap-3.3.5-dist/css/bootstrap.min.css">
+	<link rel="stylesheet" href="/libs/bootstrap-3.3.5-dist/css/bootstrap-theme.min.css">
 </head>
 <body>
-	<h1> This is index.html in public folder. </h1>
-	<button id="post"> post test </button>
+	<h1> Lunch Project </h1>
+	<!-- <button id="post"> post test </button> -->
+
+	<table class="table">
+		<thead>
+			<tr>
+				<td> <span id="restaurant_name">식당이름</span> <span id="today_date">a</span></td>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td><img id="map_img_url" src=""></td>
+			</tr>
+		</tbody>
+	</table>
+	<a class="btn btn-link btn-block" href="restaurant_list.html" role="button">Restaurant List</a>
+	<a class="btn btn-link btn-block" href="selected_lunch_list.html" role="button">Selected lunch List</a>
 	
 <script type="text/javascript" src="libs/jquery/jquery-2.1.1.min.js"></script>
 <script type="text/javascript" src="javascripts/LunchNetwork.js"></script>
@@ -38,8 +55,15 @@
 	console.log( _selectedLunchList );
 
 	*/
+	var _selectedLunch = selectTodayLunch();
+	console.info( '_selectedLunch', _selectedLunch );
+	displayTodayLunch( _selectedLunch );
 
-	selectTodayLunch();
+	var restaurantName = _selectedLunch.NAME;
+	var mapImgUrl = _selectedLunch.IMG_URL;
+	$( '#restaurant_name' ).text( restaurantName );
+	$( '#today_date' ).text( _formatedToday );
+	$( '#map_img_url' ).attr( 'src', mapImgUrl );
 	
 </script>
 

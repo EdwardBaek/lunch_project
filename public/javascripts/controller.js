@@ -26,12 +26,13 @@
 
 var _lunchNetwork = new LunchNetwork(1234);
 var _selectedLunchList = _lunchNetwork.getSelectedLunchList();
+var _formatedToday = getFomatedToday();
 
 
 // 01. 기간체크
 function isToday( date ){
 	var returnValue = false;
-	if( date == getFomatedToday() ){
+	if( date == _formatedToday ){
 		returnValue = true;
 	}
 	return returnValue;
@@ -60,25 +61,24 @@ function getFomatedToday(){
 //		새로운 식당 선정
 function selectTodayLunch(){
 	var selectedLunchList = _selectedLunchList;
-	// for( var i = 0; i < selectedLunchList.length; ++i ){
-	// 	var selectedLunch = selectedLunchList[i];
-		var selectedLunch = selectedLunchList[0];
+	var selectedLunch = selectedLunchList[0];
+	console.log( 'today : ' + isToday(selectedLunch.REG_DATE) );
 
-		console.log( 'today : ' + isToday(selectedLunch.REG_DATE) );
-		if( isToday( selectedLunch.REG_DATE ) === true ){
-			console.log( 'display from selectedLunchList' );
-			displayTodayLunch( selectedLunch );
-			// TEST
-			// console.log( 'new ');
-			// console.log( getNewTodayLunch() );
-		}else{
-			var newLunch = getNewTodayLunch();
-			console.log( 'display from newLunch' );
-			displayTodayLunch( newLunch );
-			_lunchNetwork.insertTodayLunch( newLunch );
+	if( isToday( selectedLunch.REG_DATE ) === true ){
+		console.log( 'display from selectedLunchList' );
+		// displayTodayLunch( selectedLunch );
+		return selectedLunch;
+		// TEST
+		// console.log( 'new ');
+		// console.log( getNewTodayLunch() );
+	}else{
+		var newLunch = getNewTodayLunch();
+		console.log( 'display from newLunch' );
+		// displayTodayLunch( newLunch );
+		_lunchNetwork.insertTodayLunch( newLunch );
+		return newLunch;
 
-		}
-	// }
+	}
 }
 
 //03. 새로운 식당 선정 알고리즘
@@ -88,7 +88,7 @@ function selectTodayLunch(){
 //	랜덤 함수로 식당 선정
 function getNewTodayLunch(){
 	console.log( 'getNewTodayLunch' );
-	var lunchList = _lunchNetwork.getLunchList();
+	var lunchList = _lunchNetwork.getRestaurantList();
 	var selectedLunchList = _selectedLunchList;	
 	var candidateLunchList = lunchList.slice();
 

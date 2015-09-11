@@ -109,6 +109,29 @@ app.get('/api/today_lunch_list', function(req, res){
     });
 });
 
+app.get('/api/today_lunch_list_all', function(req, res){
+    console.log("/api/today_lunch_list");
+    var baseRowNum = 5;
+    var query = ''
+               + ' SELECT LIST.IDX, DATE_FORMAT( LAUNCH.REG_DATE, "%Y-%m-%d" ) AS REG_DATE, '
+               + '      LIST.NAME, LIST.IMG_URL '
+               + ' FROM TODAY_LUNCH AS LAUNCH '
+               + ' LEFT OUTER JOIN RESTAURANTS AS LIST ON (LAUNCH.RESTAURANTS_IDX = LIST.IDX) '
+               + ' ORDER BY LAUNCH.REG_DATE desc;'; 
+    console.log( 'query : ' + query );
+
+    var dbData = dbConnection.query( query, function( err, rows ){
+        console.log( 'mysql query' );
+        if ( err ){
+            console.error( err );
+        }else{
+          console.log( rows );
+          res.json( rows );
+        }
+        console.log('---get end---');
+    });
+});
+
 
 app.post('/api/new_restaurant', function(req, res){
     console.log("/api/new_restaurant");

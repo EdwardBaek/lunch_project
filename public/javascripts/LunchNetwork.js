@@ -8,7 +8,7 @@ LunchNetwork.prototype.getIdx = function(){
 
 //TODO: API 구분
 // 반환값: [ { idx, name, imgUrl } ...  ]
-LunchNetwork.prototype.getLunchList = function( callback ){
+LunchNetwork.prototype.getRestaurantList = function( callback ){
 	var api = 'restaurant_list/';
 	var data = {};
 	return this.get( api, data, callback );
@@ -17,6 +17,12 @@ LunchNetwork.prototype.getLunchList = function( callback ){
 // 반환값: [ { idx, date } ...  ]
 LunchNetwork.prototype.getSelectedLunchList = function( callback ){
 	var api = 'today_lunch_list';
+	var data = {};
+	return this.get( api, data, callback );
+};
+
+LunchNetwork.prototype.getSelectedLunchListAll = function( callback ){
+	var api = 'today_lunch_list_all';
 	var data = {};
 	return this.get( api, data, callback );
 };
