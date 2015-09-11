@@ -16,7 +16,14 @@ var routes = require('./routes/index');
 var users = require('./routes/users');
 
 var app = express();
+//
+app.use( bodyParser.json() );
+//
+app.use( bodyParser.urlencoded() );
 
+
+// TODO: RESTFULL API 모듈화
+// TODO: mysql 모듈화
 var mysql = require( 'mysql' );
 var dbConnection = mysql.createConnection({
   host  : "localhost",
@@ -26,10 +33,6 @@ var dbConnection = mysql.createConnection({
   database: "lunch" 
 });
 
-//
-app.use( bodyParser.json() );
-//
-app.use( bodyParser.urlencoded() );
 
 //TODO: 쿼리 정리
 function getSelectRows( query, rowNumber, pageNumber ){
@@ -67,8 +70,8 @@ function printJson( json ){
 }
 
 
-app.get('/restaurant_list', function(req, res){
-    console.log("I received a GET request");
+app.get('/api/restaurant_list', function(req, res){
+    console.log("/api/restaurant_list");
     var query = 'SELECT * FROM RESTAURANTS';
     var dbData = dbConnection.query( query, function( err, rows ){
         console.log( 'mysql query' );
@@ -82,9 +85,18 @@ app.get('/restaurant_list', function(req, res){
     });
 });
 
-app.get('/today_lunch_list', function(req, res){
-    console.log("I received a GET request");
-    var query = 'SELECT * FROM TODAY_LUNCH';
+app.get('/api/today_lunch_list', function(req, res){
+    console.log("/api/today_lunch_list");
+    var baseRowNum = 5;
+    var query = ''
+               + ' SELECT LIST.IDX, DATE_FORMAT( LAUNCH.REG_DATE, "%Y-%m-%d" ) AS REG_DATE, '
+               + '      LIST.NAME, LIST.IMG_URL '
+               + ' FROM TODAY_LUNCH AS LAUNCH '
+               + ' LEFT OUTER JOIN RESTAURANTS AS LIST ON (LAUNCH.RESTAURANTS_IDX = LIST.IDX) '
+               + ' ORDER BY LAUNCH.REG_DATE desc' 
+               + ' LIMIT 0, ' + baseRowNum + ';';
+    console.log( 'query : ' + query );
+
     var dbData = dbConnection.query( query, function( err, rows ){
         console.log( 'mysql query' );
         if ( err ){
@@ -97,21 +109,20 @@ app.get('/today_lunch_list', function(req, res){
     });
 });
 
-//curl POST -H "Content-Type: application/json" http://localhost:3000/new_restaurant -v -d "{\"NAME\":\"NATHAN\"}" 
-//curl POST "http://127.0.0.1/inner-api/settings/starred/messages/8" -H "Content-Type: application/json" 
 
-app.post('/new_restaurant', function(req, res){
-    console.log( 'req.body' );
-    console.log( req.body );  
+app.post('/api/new_restaurant', function(req, res){
+    console.log("/api/new_restaurant");
+    console.info( 'req.body', req.body );
     printJson( req.body );
-    var name = req.body.NAME;
-    var imgUrl = req.body.IMG_URL;
-    var idx = req.body.IDX;
+    var idx     = req.body.IDX;
+    var name    = req.body.NAME;
+    var imgUrl  = req.body.IMG_URL;
+    console.log( 'req.body.IDX : ' + idx );  
     console.log( 'req.body.NAME : ' + name );  
     console.log( 'req.body.IMG_URL : ' + imgUrl );  
 
-    var query = '';
-    query += 'INSERT INTO TODAY_LUNCH VALUES( "'+ idx + '", NOW() )';
+    var query = ''
+              + 'INSERT INTO TODAY_LUNCH VALUES( "'+ idx + '", NOW() )';
     console.log( 'query :\n' + query );
 
     var dbData = dbConnection.query( query, function( err, rows ){

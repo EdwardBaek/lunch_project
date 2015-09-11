@@ -60,21 +60,25 @@ function getFomatedToday(){
 //		새로운 식당 선정
 function selectTodayLunch(){
 	var selectedLunchList = _selectedLunchList;
-	for( var i = 0; i < selectedLunchList.length; ++i ){
-		var selectedLunch = selectedLunchList[i];
+	// for( var i = 0; i < selectedLunchList.length; ++i ){
+	// 	var selectedLunch = selectedLunchList[i];
+		var selectedLunch = selectedLunchList[0];
+
 		console.log( 'today : ' + isToday(selectedLunch.REG_DATE) );
 		if( isToday( selectedLunch.REG_DATE ) === true ){
+			console.log( 'display from selectedLunchList' );
 			displayTodayLunch( selectedLunch );
 			// TEST
 			// console.log( 'new ');
 			// console.log( getNewTodayLunch() );
 		}else{
 			var newLunch = getNewTodayLunch();
+			console.log( 'display from newLunch' );
 			displayTodayLunch( newLunch );
 			_lunchNetwork.insertTodayLunch( newLunch );
 
 		}
-	}
+	// }
 }
 
 //03. 새로운 식당 선정 알고리즘
@@ -83,6 +87,7 @@ function selectTodayLunch(){
 //	C = A - B : 후보 식당 리스트 구성
 //	랜덤 함수로 식당 선정
 function getNewTodayLunch(){
+	console.log( 'getNewTodayLunch' );
 	var lunchList = _lunchNetwork.getLunchList();
 	var selectedLunchList = _selectedLunchList;	
 	var candidateLunchList = lunchList.slice();
@@ -107,8 +112,8 @@ function getRandomNumber( max ){
 
 //04. 해당 결과를 출력
 function displayTodayLunch( lunchItem ){
-	console.log( '***display***' );
-	console.log( lunchItem );
+	console.info( '***displayTodayLunch***', lunchItem );
+	console.log( '' );
 }
 
 function getLunchItemByIdx( idx ){
