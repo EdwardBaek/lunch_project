@@ -6,23 +6,27 @@
 	<link rel="stylesheet" href="/libs/bootstrap-3.3.5-dist/css/bootstrap-theme.min.css">
 </head>
 <body>
-	<h1> Lunch Project </h1>
-	<!-- <button id="post"> post test </button> -->
-
-	<table class="table">
-		<thead>
-			<tr>
-				<td> <span id="restaurant_name">식당이름</span> <span id="today_date">a</span></td>
-			</tr>
-		</thead>
-		<tbody>
-			<tr>
-				<td><img id="map_img_url" src=""></td>
-			</tr>
-		</tbody>
-	</table>
-	<a class="btn btn-link btn-block" href="restaurant_list.html" role="button">Restaurant List</a>
-	<a class="btn btn-link btn-block" href="selected_lunch_list.html" role="button">Selected lunch List</a>
+	<div class="container">
+		<h1> Lunch Project </h1>
+		<!-- <button id="post"> post test </button> -->
+		
+		<table class="table">
+			<thead>
+				<tr>
+					<td> <span id="restaurant_name">식당이름</span> <span id="today_date">a</span></td>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td><img id="map_img_url" src=""></td>
+				</tr>
+			</tbody>
+		</table>
+		<a class="btn btn-link btn-block" onclick="reset();" role="button">Reset</a>
+		<a class="btn btn-link btn-block" href="restaurant_list.html" role="button">Restaurant List</a>
+		<a class="btn btn-link btn-block" href="selected_lunch_list.html" role="button">Selected lunch List</a>
+		<a class="btn btn-link btn-block" href="write_new_restaurant.html" role="button">ADD Restaurant</a>
+	</div>
 	
 <script type="text/javascript" src="libs/jquery/jquery-2.1.1.min.js"></script>
 <script type="text/javascript" src="javascripts/LunchNetwork.js"></script>
@@ -55,15 +59,38 @@
 	console.log( _selectedLunchList );
 
 	*/
-	var _selectedLunch = selectTodayLunch();
-	console.info( '_selectedLunch', _selectedLunch );
-	displayTodayLunch( _selectedLunch );
 
-	var restaurantName = _selectedLunch.NAME;
-	var mapImgUrl = _selectedLunch.IMG_URL;
-	$( '#restaurant_name' ).text( restaurantName );
-	$( '#today_date' ).text( _formatedToday );
-	$( '#map_img_url' ).attr( 'src', mapImgUrl );
+	// FIXME: reset 이후 다른 페이지로 이동 후 되돌아 올때 _selectedLunchList에서 오늘날짜가 빠진 4개값을 가진 배열로 돌아온다.
+	//		  오늘 선택된 식당이 없으므로 새 식당을 선정하여 계속 추가한다.
+	function refresh(){
+		console.log( '---refresh---' );
+		var _selectedLunch = selectTodayLunch();
+		console.log( new Date() );
+		console.info( '_selectedLunch', _selectedLunch );
+		displayTodayLunch( _selectedLunch );
+
+		var restaurantName = _selectedLunch.NAME;
+		var mapImgUrl = _selectedLunch.IMG_URL;
+		$( '#restaurant_name' ).text( restaurantName );
+		$( '#today_date' ).text( _formatedToday );
+		$( '#map_img_url' ).attr( 'src', mapImgUrl );
+		console.log( '***refresh+***' );
+	}
+
+	function reset(){
+
+		_lunchNetwork.deleteTodayLunch( function(){
+			_selectedLunchList = null;
+			console.info( '_selectedLunchList', _selectedLunchList );
+
+			refresh();
+		});
+	}
+
+	refresh();
+
+
+
 	
 </script>
 

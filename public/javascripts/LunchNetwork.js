@@ -14,10 +14,16 @@ LunchNetwork.prototype.getRestaurantList = function( callback ){
 	return this.get( api, data, callback );
 };
 
+LunchNetwork.prototype.deleteTodayLunch = function( callback ){
+	var api = 'delete_today_lunch';
+	var data = {idx : 1 };
+	return this.delete( api, data, callback );
+};
+
 // 반환값: [ { idx, date } ...  ]
 LunchNetwork.prototype.getSelectedLunchList = function( callback ){
 	var api = 'today_lunch_list';
-	var data = {};
+	var data = { idx : 1 };
 	return this.get( api, data, callback );
 };
 
@@ -70,7 +76,8 @@ LunchNetwork.prototype.ajax = function( restType, api, data, callback ){
 		type	: restType,
 		url		: "/api/" + api,
 		dataType: "json",
-		// XXX: controller 초기화시 변수에 담기 때문에 현재 동기식으로 지정. html page 로딩/ 유저 편의 차원에서 좋지 않은 방법인 것 같다.
+		// XXX: controller 초기화시 변수에 담기 때문에 현재 동기식으로 지정. 
+		// 		html page 로딩/ 유저 편의 차원에서 좋지 않은 방법인 것 같다.
 		async	: false,
 		data	: data,
 		timeout: 5000,

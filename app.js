@@ -6,23 +6,45 @@
       2015.09. 04(Fri)       Edward       Create 
 **************************************************************************************************/
 
-var express = require('express');
-var path = require('path');
-var favicon = require('serve-favicon');
-var logger = require('morgan');
-var cookieParser = require('cookie-parser');
-var bodyParser = require('body-parser');
-var routes = require('./routes/index');
-var users = require('./routes/users');
+var express       = require('express');
+var path          = require('path');
+var favicon       = require('serve-favicon');
+var logger        = require('morgan');
+var routes        = require('./routes/index');
+var users         = require('./routes/users');
+var fs            = require('fs');
+var bodyParser    = require('body-parser');
+var cookieParser  = require('cookie-parser');
+var multer        = require('multer');
 
-var app = express();
-//
+var app     = express();
+
+// var upload  = multer( { dest: './public/uploads' });
+var storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+      cb(null, './public/uploads')
+    },
+    filename: function (req, file, cb) {
+      console.log( file );
+      cb(null, Date.now() + '-' +  file.originalname )
+    }
+})
+
+var upload = multer({ storage: storage })
+
+// TODO: logger use / mysql log
 app.use( bodyParser.json() );
-//
-app.use( bodyParser.urlencoded() );
+// TODO: 아래 관련 정보 정리. post시 body정보 에러 있었음.
+app.use( bodyParser.urlencoded({ extended : false}) );
+
+
+app.use(cookieParser());
+app.use(express.static(path.join(__dirname, 'public')));
+app.use( logger('dev') );
 
 
 // TODO: RESTFULL API 모듈화
+// TODO: 기능에 따른 API 재설
 // TODO: mysql 모듈화
 var mysql = require( 'mysql' );
 var dbConnection = mysql.createConnection({
@@ -72,7 +94,7 @@ function printJson( json ){
 
 app.get('/api/restaurant_list', function(req, res){
     console.log("/api/restaurant_list");
-    var query = 'SELECT * FROM RESTAURANTS';
+    var query = 'SELECT IDX, NAME, IMG_URL, DATE_FORMAT( REG_DATE, "%Y-%m-%d" ) AS REG_DATE FROM RESTAURANTS ORDER BY IDX DESC';
     var dbData = dbConnection.query( query, function( err, rows ){
         console.log( 'mysql query' );
         if ( err ){
@@ -152,10 +174,74 @@ app.post('/api/new_restaurant', function(req, res){
       console.log( rows );
       res.json( rows );
       console.log('---newRestaurant end---');
-  });
+    });
 });
 
+app.put('/api/reset_today_lunch', function(req, res){
+    console.log("/api/reset_today_lunch");
+    console.info( 'req.body', req.body );
+    res.send( req.body );
+});
 
+app.delete('/api/delete_today_lunch', function(req, res){
+    console.log("/api/delete_today_lunch");
+    console.info( 'req.body', req.body );
+    var query = ''
+              + 'DELETE '
+              + '  FROM TODAY_LUNCH '
+              + ' WHERE REG_DATE = DATE_FORMAT( NOW(), "%Y-%m-%d" );';
+    console.log( 'query :\n' + query );
+    var dbData = dbConnection.query( query, function( err, rows ){
+        console.log( rows );
+        res.json( rows );
+        console.log('---delete_today_lunch end---');
+    });
+});
+
+app.post('/api/file_upload', upload.single('uploadFile'), function(req, res) {
+    console.log("/api/file_upload");
+    console.info( 'req.file', req.file );
+    console.info( 'req.file.filename', req.file.filename );
+    console.info( 'req.body', req.body );    
+    res.end();
+});
+
+app.post('/api/add_new_restaurant', upload.single('uploadFile'), function(req, res) {
+    console.log("/api/add_new_restaurant");
+    var publicImagePath = '/images/';
+    var uploadsPath = '/uploads/';
+    var fileName = '';
+    var imgUrl = '';
+    var restaurantName = req.body.restaurantName;
+    
+    if( req.file == undefined ){
+        console.warn( 'no file uploaded' );
+        fileName = 'no_restaurant_image.png';
+        imgUrl = publicImagePath + fileName ;
+    }else{
+        fileName = req.file.filename;
+        imgUrl = uploadsPath + fileName ;
+    }
+
+    // console.info( 'req.file', req.file );
+    // console.info( 'req.file.filename', req.file.filename );
+    console.info( 'req.body', req.body );    
+    console.info( 'restaurantName', restaurantName )
+    console.info( 'imgUrl', imgUrl )
+
+    var query = ''
+              + ' INSERT INTO RESTAURANTS ( NAME,  IMG_URL, REG_DATE ) '
+              + '                 VALUES  ( "' + restaurantName + '", "' + imgUrl + '", NOW() ); ';
+    console.log( 'query :\n' + query );
+
+    var dbData = dbConnection.query( query, function( err, rows ){
+      console.log( rows );
+      res.json( rows );
+      console.log('---newRestaurant end---');
+    });
+    // TODO: set redirection page
+    // res.end();
+});
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -163,11 +249,10 @@ app.set('view engine', 'jade');
 
 // uncomment after placing your favicon in /public
 //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
-app.use(logger('dev'));
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: false }));
-app.use(cookieParser());
-app.use(express.static(path.join(__dirname, 'public')));
+// app.use(bodyParser.json());
+// app.use(bodyParser.urlencoded({ extended: false }));
+
+
 
 app.use('/', routes);
 app.use('/users', users);

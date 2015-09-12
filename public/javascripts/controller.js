@@ -60,10 +60,18 @@ function getFomatedToday(){
 //	오늘이 아니면
 //		새로운 식당 선정
 function selectTodayLunch(){
-	var selectedLunchList = _selectedLunchList;
+	var selectedLunchList = '';
+	console.info( 'selectedLunchList', selectedLunchList);
+	if( _selectedLunchList === null ){
+		console.info( '_selectedLunchList', _selectedLunchList)
+		_selectedLunchList = _lunchNetwork.getSelectedLunchList();
+		console.info( '_selectedLunchList', _selectedLunchList)
+	}
+	selectedLunchList = _selectedLunchList;
+	console.info( 'selectedLunchList', selectedLunchList);
 	var selectedLunch = selectedLunchList[0];
 	console.log( 'today : ' + isToday(selectedLunch.REG_DATE) );
-
+	console.info( 'selectedLunch.REG_DATE', selectedLunch.REG_DATE );
 	if( isToday( selectedLunch.REG_DATE ) === true ){
 		console.log( 'display from selectedLunchList' );
 		// displayTodayLunch( selectedLunch );
@@ -76,11 +84,14 @@ function selectTodayLunch(){
 		console.log( 'display from newLunch' );
 		// displayTodayLunch( newLunch );
 		_lunchNetwork.insertTodayLunch( newLunch );
+		_selectedLunchList = null;
+		selectedLunchList = null;
+		console.log( '_lunchNetwork.insertTodayLunch( newLunch );' );
+
 		return newLunch;
 
 	}
 }
-
 //03. 새로운 식당 선정 알고리즘
 //	A = 전체 식당 리스트 구성
 //	B = 기존의 선택되었던 식당 테이블 구성

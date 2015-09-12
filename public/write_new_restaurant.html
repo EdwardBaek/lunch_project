@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title> Add New Restaurnat </title>
+	<link rel="stylesheet" href="/libs/bootstrap-3.3.5-dist/css/bootstrap.min.css">
+	<link rel="stylesheet" href="/libs/bootstrap-3.3.5-dist/css/bootstrap-theme.min.css">
+</head>
+<body>
+	<div class="container">
+		<h1> Add New Restaurant </h1>
+		<!-- <button id="post"> post test </button> -->
+		<div>
+			<form name="newRetaurantForm" action="/api/add_new_restaurant", method="post" enctype="multipart/form-data">
+				<!-- Live Preview -->
+				<fieldset calss="form-group">
+					<blockquote>
+					<b>식당이름과 위치 혹은 관련 이미지를 올려주세요.</b>
+					<cite></cite>
+					</blockquote>
+				</fieldset>
+				<h4>Submit a new restaurant</h4>
+				<fieldset calss="form-group">							
+					<input type="text" class="form-control" name="restaurantName" placeholder="Restaurant Name" title="restaurantName"/>
+				</fieldset>
+				<fieldset calss="form-group">							
+					<input type="file" name="uploadFile">
+				</fieldset>
+				<fieldset calss="form-group">							
+					<input onclick="add();" type="submit" class="btn btn-primary pull-right" value="Submit Review"/>
+				</fieldset>
+			</form>
+		</div>
+	</div>
+	
+<script type="text/javascript" src="libs/jquery/jquery-2.1.1.min.js"></script>
+<script type="text/javascript" src="javascripts/LunchNetwork.js"></script>
+<script type="text/javascript" src="javascripts/controller.js"></script>
+<script type="text/javascript">
+function add(){
+	console.log( 'add' );
+}
+
+// TODO: redirection
+</script>
+
+</body>
+</html>
