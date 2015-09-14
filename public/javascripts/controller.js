@@ -26,13 +26,17 @@
 
 var _lunchNetwork = new LunchNetwork(1234);
 var _selectedLunchList = _lunchNetwork.getSelectedLunchList();
-var _formatedToday = getFomatedToday();
+
+// FIXME: 네트워크로 값을 가져오지 않는다.
+//			1.reset() 후 -> 2.선택된 식당리스트로 이동 3.뒤로 가기 4.앞으로 가기 
+// 			네트워크에서 값을 제대로 가져오지 않는다.
+console.info( 'init _selectedLunchList', _selectedLunchList );
 
 
 // 01. 기간체크
 function isToday( date ){
 	var returnValue = false;
-	if( date == _formatedToday ){
+	if( date == getFomatedToday() ){
 		returnValue = true;
 	}
 	return returnValue;
@@ -60,18 +64,22 @@ function getFomatedToday(){
 //	오늘이 아니면
 //		새로운 식당 선정
 function selectTodayLunch(){
-	var selectedLunchList = '';
+	var selectedLunchList = get_selectedLunchList();
 	console.info( 'selectedLunchList', selectedLunchList);
-	if( _selectedLunchList === null ){
-		console.info( '_selectedLunchList', _selectedLunchList)
-		_selectedLunchList = _lunchNetwork.getSelectedLunchList();
-		console.info( '_selectedLunchList', _selectedLunchList)
+	console.info( 'selectedLunchList.length', selectedLunchList.length);
+
+	var selectedLunch = '';
+	if( selectedLunchList.length === 0 ){
+		selectedLunch.REG_DATE = getFomatedToday();
+	}else{
+		selectedLunch = selectedLunchList[0];
 	}
-	selectedLunchList = _selectedLunchList;
-	console.info( 'selectedLunchList', selectedLunchList);
-	var selectedLunch = selectedLunchList[0];
-	console.log( 'today : ' + isToday(selectedLunch.REG_DATE) );
-	console.info( 'selectedLunch.REG_DATE', selectedLunch.REG_DATE );
+
+	console.info( '***selectedLunch', selectedLunch );
+	console.info( '***selectedLunch.REG_DATE', selectedLunch.REG_DATE );
+	console.info( '***getFomatedToday()', getFomatedToday() );
+	console.info( '***today', isToday(selectedLunch.REG_DATE) );
+
 	if( isToday( selectedLunch.REG_DATE ) === true ){
 		console.log( 'display from selectedLunchList' );
 		// displayTodayLunch( selectedLunch );
@@ -125,6 +133,7 @@ function getRandomNumber( max ){
 function displayTodayLunch( lunchItem ){
 	console.info( '***displayTodayLunch***', lunchItem );
 	console.log( '' );
+	resetGlobalValues();
 }
 
 function getLunchItemByIdx( idx ){
@@ -132,6 +141,23 @@ function getLunchItemByIdx( idx ){
 	return lunchItem;
 }
 
+function resetTodayLunch( callback ){
+	resetGlobalValues();
+	_lunchNetwork.deleteTodayLunch( callback );
+}
+
+// XXX: 분리되어 있지 않은 함수. 다른 대안을 찾아보자.
+function get_selectedLunchList(){
+	if( _selectedLunchList === null || _selectedLunchList === undefined || _selectedLunchList.length == 0){
+		_selectedLunchList = _lunchNetwork.getSelectedLunchList();
+	}
+	return _selectedLunchList;
+}
+
+function resetGlobalValues(){
+	_selectedLunchList 	= '';
+	console.info( '_selectedLunchList', _selectedLunchList );
+}
 //TODO: 설계 및 코딩 프로세스 기록 및 코멘트
 
 

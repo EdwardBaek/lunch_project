@@ -33,37 +33,12 @@
 <script type="text/javascript" src="javascripts/controller.js"></script>
 <script type="text/javascript">
 	
-/*
-	var data ={
-		IDX : 4
-	};
-
-	function click(){
-		console.log( 'click');
-		console.log( data );
-		// post test
-		// _lunchNetwork.ajax( 'POST', 'new_restaurant', data, function( result ){
-		// 	console.log( result );
-		// });		
-	}	
-
-	document.getElementById("post").addEventListener( 'click', click );
-
-	console.log( data );
-
-	_lunchNetwork.ajax( 'GET', 'restaurant_list', data, function( result ){
-		console.log( ' result : ' );
-		console.log( result );
-	});
-
-	console.log( _selectedLunchList );
-
-	*/
 
 	// FIXME: reset 이후 다른 페이지로 이동 후 되돌아 올때 _selectedLunchList에서 오늘날짜가 빠진 4개값을 가진 배열로 돌아온다.
 	//		  오늘 선택된 식당이 없으므로 새 식당을 선정하여 계속 추가한다.
 	function refresh(){
 		console.log( '---refresh---' );
+
 		var _selectedLunch = selectTodayLunch();
 		console.log( new Date() );
 		console.info( '_selectedLunch', _selectedLunch );
@@ -71,18 +46,16 @@
 
 		var restaurantName = _selectedLunch.NAME;
 		var mapImgUrl = _selectedLunch.IMG_URL;
+		var regDate = _selectedLunch.REG_DATE;
+
 		$( '#restaurant_name' ).text( restaurantName );
-		$( '#today_date' ).text( _formatedToday );
+		$( '#today_date' ).text( regDate );
 		$( '#map_img_url' ).attr( 'src', mapImgUrl );
 		console.log( '***refresh+***' );
 	}
 
 	function reset(){
-
 		_lunchNetwork.deleteTodayLunch( function(){
-			_selectedLunchList = null;
-			console.info( '_selectedLunchList', _selectedLunchList );
-
 			refresh();
 		});
 	}

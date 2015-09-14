@@ -7,15 +7,15 @@
 </head>
 <body>
 	<div class="container">
-		<h1> Add New Restaurant </h1>
+		<h1> Add a New Restaurant </h1>
 		<!-- <button id="post"> post test </button> -->
 		<div>
 			<form name="newRetaurantForm" action="/api/add_new_restaurant", method="post" enctype="multipart/form-data">
 				<!-- Live Preview -->
 				<fieldset calss="form-group">
 					<blockquote>
-					<b>식당이름과 위치 혹은 관련 이미지를 올려주세요.</b>
-					<cite></cite>
+					<b>식당이름과 위치 이미지를 올려주세요.</b></br>
+					<cite>*추후 이미지는 식당 이미지로, 위치는 지도 API를 사용으로 변경됩니다.</cite>
 					</blockquote>
 				</fieldset>
 				<h4>Submit a new restaurant</h4>
@@ -26,7 +26,7 @@
 					<input type="file" name="uploadFile">
 				</fieldset>
 				<fieldset calss="form-group">							
-					<input onclick="add();" type="submit" class="btn btn-primary pull-right" value="Submit Review"/>
+					<input onclick="add();" type="submit" class="btn btn-primary pull-right" value="Submit a New Restaurant"/>
 				</fieldset>
 			</form>
 		</div>
