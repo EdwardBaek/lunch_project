@@ -13,16 +13,18 @@
 	<table class="table">
 		<thead>
 			<tr>
-				<td> <h4>식당이름</h4> </td>
-				<td> <h4>선정날자</h4> </td>
-				<td> <h4>이미지</h4> </td>
+				<td> <h4>식당이름 ( 선정날짜 )</h4> </td>
 			</tr>
 		</thead>
 		<tbody id="table">
 			<tr>
-				<td>{NAME}</td>
-				<td>{REG_DATE}</td>
+				<td>{NAME} ( {REG_DATE} )</td>
+			</tr>
+			<tr>
 				<td><img ng-src="{IMG_URL}"></td>
+			</tr>
+			<tr>
+				<td></td>
 			</tr>
 		</tbody>
 	</table>
@@ -38,9 +40,6 @@
 
 	var restaurantListTable = new HtmlHelper( '#table' );
 	restaurantListTable.writeHtml( restaurantList );
-
-	
-	
 </script>
 
 </body>

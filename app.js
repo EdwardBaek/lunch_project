@@ -5,6 +5,7 @@
     Update History
       2015.09. 04(Fri)       Edward       Create 
 **************************************************************************************************/
+'use strict'
 
 var express       = require('express');
 var path          = require('path');
@@ -32,6 +33,8 @@ var storage = multer.diskStorage({
 
 var upload = multer({ storage: storage })
 
+
+console.log('lunch server started...');
 // TODO: logger use / mysql log
 app.use( bodyParser.json() );
 // TODO: 아래 관련 정보 정리. post시 body정보 에러 있었음.
@@ -158,7 +161,7 @@ app.get('/api/today_lunch_list_all', function(req, res){
 app.post('/api/new_restaurant', function(req, res){
     console.log("/api/new_restaurant");
     console.info( 'req.body', req.body );
-    printJson( req.body );
+    // printJson( req.body );
     var idx     = req.body.IDX;
     var name    = req.body.NAME;
     var imgUrl  = req.body.IMG_URL;
@@ -285,6 +288,7 @@ app.use(function(err, req, res, next) {
     error: {}
   });
 });
+
 
 
 module.exports = app;
