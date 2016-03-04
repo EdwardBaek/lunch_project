@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title> Lunch Test Page </title>
+	<link rel="stylesheet" href="/bower_components/bootstrap/dist/css/bootstrap.min.css">
+	<link rel="stylesheet" href="/bower_components/bootstrap/css/bootstrap-theme.min.css">
+</head>
+<body>
+	<div class="container">
+		<h1> Test </h1>
+		<!-- <button id="post"> post test </button> -->
+				
+		</br></br></br>
+		<a class="btn btn-link btn-block" onclick="testGet();" role="button">Test Get</a>
+		<a class="btn btn-link btn-block" onclick="testPost();" role="button">Test Post</a>
+		<a class="btn btn-link btn-block" onclick="testPut();" role="button">Test Put</a>
+		<a class="btn btn-link btn-block" onclick="testDelete();" role="button">Test Delete</a>
+	</div>
+	
+<script type="text/javascript" src="/bower_components/jquery/dist/jquery.js"></script>
+<script type="text/javascript" src="javascripts/LunchNetwork.js"></script>
+<script type="text/javascript" src="javascripts/controller.js"></script>
+<script type="text/javascript">
+
+	function testGet(){
+		_lunchNetwork.get(
+			'test/',
+			{'name' : 'get-method'},
+			function(result){
+				console.log(result);
+			}
+		);
+	}
+	function testPost(){
+		_lunchNetwork.post(
+			'test/',
+			{'name' : 'post-method'},
+			function(result){
+				console.log(result);
+			}
+		);
+	}
+	function testPut(){
+		_lunchNetwork.put(
+			'test/',
+			{'name' : 'put-method'},
+			function(result){
+				console.log(result);
+			}
+		);
+	}
+	function testDelete(){
+		_lunchNetwork.delete(
+			'test/',
+			{'name' : 'delete-method'},
+			function(result){
+				console.log(result);
+			}
+		);
+	}
+</script>
+
+</body>
+</html>

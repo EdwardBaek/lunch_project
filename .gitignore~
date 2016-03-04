@@ -1,4 +1,4 @@
-/public/uploads
+public/uploads/
 /node_modules
 /public/bower_components
 *.log

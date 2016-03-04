@@ -24,8 +24,12 @@
 04. 해당 결과를 출력
 */
 
-var _lunchNetwork = new LunchNetwork(1234);
-var _selectedLunchList = _lunchNetwork.getSelectedLunchList();
+var _lunchNetwork = new LunchNetwork();
+var _selectedLunchList = _lunchNetwork.getSelectedLunchList(5, 
+			function(result){
+				console.info('result', result)
+				console.log(new Date());
+			});
 
 // FIXME: 네트워크로 값을 가져오지 않는다.
 //			1.reset() 후 -> 2.선택된 식당리스트로 이동 3.뒤로 가기 4.앞으로 가기 
@@ -43,84 +47,88 @@ function isToday( date ){
 }
 
 function getFomatedToday(){
-	var now 		= new Date();
+	return getFormatedDate( new Date() );
+}
+
+function getFormatedDate( rawDate ){
+	var now 		= new Date(rawDate);
 	var formatedDay = now;
 	var year 		= now.getFullYear();
 	var month 		= now.getMonth() + 1;
-	var date 		= now.getDate();
+	var day 		= now.getDate();
 	if( month < 10 ){
 		month = '0' + month;
 	}
-	if( date < 10 ){
-		date = '0' + date;
+	if( day < 10 ){
+		day = '0' + day;
 	}
-	formatedDay = year + '-' + month + '-' + date ;
+	formatedDay = year + '-' + month + '-' + day ;
 	return formatedDay.trim();
 }
+
 
 //02. 식당 선정 알고리즘
 //	오늘일 경우 	
 //		그대로 출력
 //	오늘이 아니면
 //		새로운 식당 선정
-function selectTodayLunch(){
-	var selectedLunchList = get_selectedLunchList();
-	console.info( 'selectedLunchList', selectedLunchList);
-	console.info( 'selectedLunchList.length', selectedLunchList.length);
+function getSelectTodayLunch(){
+	// var selectedLunchList = get_selectedLunchList();
+	var selectedLunchList = _lunchNetwork.getSelectedLunchList(5);
+	
+	// console.info( 'selectedLunchList', selectedLunchList);
+	// console.info( 'selectedLunchList.length', selectedLunchList.length);
 
 	var selectedLunch = '';
 	if( selectedLunchList.length === 0 ){
-		selectedLunch.REG_DATE = getFomatedToday();
+		selectedLunch.date = getFomatedToday();
 	}else{
 		selectedLunch = selectedLunchList[0];
 	}
 
-	console.info( '***selectedLunch', selectedLunch );
-	console.info( '***selectedLunch.REG_DATE', selectedLunch.REG_DATE );
-	console.info( '***getFomatedToday()', getFomatedToday() );
-	console.info( '***today', isToday(selectedLunch.REG_DATE) );
+	console.info( '***check selectedTodaydate', getFormatedDate(selectedLunch.date) +'/'+ selectedLunch.date );
+	console.info( '***check Today', isToday(getFormatedDate(selectedLunch.date)) + ' t:'+getFomatedToday() +'/ s:' +getFormatedDate(selectedLunch.date) );
 
-	if( isToday( selectedLunch.REG_DATE ) === true ){
+	if( isToday( getFormatedDate(selectedLunch.date) ) === true ){
 		console.log( 'display from selectedLunchList' );
-		// displayTodayLunch( selectedLunch );
 		return selectedLunch;
-		// TEST
-		// console.log( 'new ');
-		// console.log( getNewTodayLunch() );
 	}else{
 		var newLunch = getNewTodayLunch();
-		console.log( 'display from newLunch' );
-		// displayTodayLunch( newLunch );
+		console.log( 'display from newLunchList' );
+		// console.info('newLunch', newLunch );
 		_lunchNetwork.insertTodayLunch( newLunch );
+
 		_selectedLunchList = null;
 		selectedLunchList = null;
-		console.log( '_lunchNetwork.insertTodayLunch( newLunch );' );
+		console.log('getSelectTodayLunch-_selectedLunchList:' + _selectedLunchList);
+		// console.log( '_lunchNetwork.insertTodayLunch( newLunch );' );		
 
 		return newLunch;
-
 	}
 }
+
 //03. 새로운 식당 선정 알고리즘
 //	A = 전체 식당 리스트 구성
 //	B = 기존의 선택되었던 식당 테이블 구성
 //	C = A - B : 후보 식당 리스트 구성
 //	랜덤 함수로 식당 선정
 function getNewTodayLunch(){
-	console.log( 'getNewTodayLunch' );
-	var lunchList = _lunchNetwork.getRestaurantList();
+	// console.log( 'getNewTodayLunch' );
+	var restaurantList = _lunchNetwork.getRestaurantList();
+	// console.log('restaurantList',restaurantList);
 	var selectedLunchList = _selectedLunchList;	
-	var candidateLunchList = lunchList.slice();
+	var candidateLunchList = restaurantList.slice();
 
 	// cadidate table 구성
-	for( var idxLunch = lunchList.length - 1; 0 < idxLunch; --idxLunch ){
+	for( var idxLunch = restaurantList.length - 1; 0 < idxLunch; --idxLunch ){
 		for( var idxSelect = 0; idxSelect < selectedLunchList.length; ++idxSelect){
-			if( lunchList[idxLunch].IDX === selectedLunchList[idxSelect].IDX ){
+			if( restaurantList[idxLunch].id === selectedLunchList[idxSelect].id ){
 				candidateLunchList.splice( idxLunch, 1 );
 				break;
 			}			
 		}
 	}
-
+	// console.log('candidateLunchList',candidateLunchList);
 	var idxSelectedLunch = getRandomNumber( candidateLunchList.length );
 	return candidateLunchList[ idxSelectedLunch ];
 }
@@ -129,12 +137,9 @@ function getRandomNumber( max ){
 	return Math.floor( ( Math.random() * max ) );
 }
 
+
 //04. 해당 결과를 출력
-function displayTodayLunch( lunchItem ){
-	console.info( '***displayTodayLunch***', lunchItem );
-	console.log( '' );
-	resetGlobalValues();
-}
+
 
 function getLunchItemByIdx( idx ){
 	var lunchItem = '';
@@ -156,7 +161,7 @@ function get_selectedLunchList(){
 
 function resetGlobalValues(){
 	_selectedLunchList 	= '';
-	console.info( '_selectedLunchList', _selectedLunchList );
+	// console.info( '_selectedLunchList', _selectedLunchList );
 }
 //TODO: 설계 및 코딩 프로세스 기록 및 코멘트
 

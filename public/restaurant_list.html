@@ -2,8 +2,20 @@
 <html>
 <head>
 	<title> Lunch Project - Restaurant List </title>
-	<link rel="stylesheet" href="/libs/bootstrap-3.3.5-dist/css/bootstrap.min.css">
-	<link rel="stylesheet" href="/libs/bootstrap-3.3.5-dist/css/bootstrap-theme.min.css">
+	<link rel="stylesheet" href="/bower_components/bootstrap/dist/css/bootstrap.min.css">
+	<link rel="stylesheet" href="/bower_components/bootstrap/css/bootstrap-theme.min.css">
+	<style>
+		thead tr>td{
+			text-align: center;
+		}
+		tbody tr>td:not(tbody tr>td.title){
+			text-align: center;
+			height: 300px;
+		}
+		tbody tr>td img{
+			height: 300px;
+		}
+	</style>
 </head>
 <body>
 	<a class="btn btn-link btn-block" href="javascript:history.back()" role="button">Back</a>
@@ -17,11 +29,11 @@
 			</tr>
 		</thead>
 		<tbody id="table">
-			<tr>
-				<td>{NAME} ( {REG_DATE} )</td>
+			<tr class="title">
+				<td>{name} ( {reg_date} )</td>
 			</tr>
 			<tr>
-				<td><img ng-src="{IMG_URL}"></td>
+				<td><img ng-src="{img_url}"></td>
 			</tr>
 			<tr>
 				<td></td>
@@ -29,7 +41,7 @@
 		</tbody>
 	</table>
 	
-<script type="text/javascript" src="libs/jquery/jquery-2.1.1.min.js"></script>
+<script type="text/javascript" src="/bower_components/jquery/dist/jquery.js"></script>
 <script type="text/javascript" src="javascripts/LunchNetwork.js"></script>
 <script type="text/javascript" src="javascripts/HtmlHelper.js"></script>
 <script type="text/javascript">

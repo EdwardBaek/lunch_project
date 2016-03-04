@@ -1,43 +1,52 @@
-function LunchNetwork( val ){
+var LunchNetwork = function LunchNetwork( val ){
 	this.idx = val;
-}
+};
 
 LunchNetwork.prototype.getIdx = function(){
 	return this.idx;
 };
 
 //TODO: API 구분
-// 반환값: [ { idx, name, imgUrl } ...  ]
-LunchNetwork.prototype.getRestaurantList = function( callback ){
-	var api = 'restaurant_list/';
+LunchNetwork.prototype.getRestaurantList = function( limitNum, callback ){
+	if( !limitNum || Number(limitNum) === NaN )
+		limitNum = 9999;
+	var api = 'restaurant/'+ limitNum +'/0/?time=' + Math.random();
 	var data = {};
 	return this.get( api, data, callback );
 };
 
 LunchNetwork.prototype.deleteTodayLunch = function( callback ){
-	var api = 'delete_today_lunch';
+	var api = 'today/lunch';
 	var data = {idx : 1 };
 	return this.delete( api, data, callback );
 };
 
-// 반환값: [ { idx, date } ...  ]
-LunchNetwork.prototype.getSelectedLunchList = function( callback ){
-	var api = 'today_lunch_list';
-	var data = { idx : 1 };
+LunchNetwork.prototype.getSelectedLunchList = function( limitNum, callback ){
+	if( !limitNum || Number(limitNum) === NaN )
+		limitNum = 5;
+	var api = 'today/lunch/'+ limitNum +'/0/?time=' + Math.random();
+	var data = {};
 	return this.get( api, data, callback );
 };
 
 LunchNetwork.prototype.getSelectedLunchListAll = function( callback ){
-	var api = 'today_lunch_list_all';
+	var api = 'today/lunch/9999/0';
 	var data = {};
 	return this.get( api, data, callback );
 };
 
 LunchNetwork.prototype.insertTodayLunch = function( data ){
-	console.info( 'insertTodayLunch', data );
-	var api = 'new_restaurant';
+	console.info( 'insertTodayLunch', data );	
+	var api = 'today/lunch';
 	var data = data ;
 	var callback = '';
+	return this.put( api, data, callback );
+};
+
+LunchNetwork.prototype.insertRestaurant = function( data, callback ){
+	console.info( 'add_new_restaurant', data );
+	var api = 'add_new_restaurant';
+	var data = data ;	
 	return this.post( api, data, callback );
 };
 
@@ -68,7 +77,7 @@ LunchNetwork.prototype.ajax = function( restType, api, data, callback ){
 	var returnValue = "";
 	// console.log( '---ajax---' );
 	// console.log( 'restType : ' + restType );
-	// console.log( 'api : ' + api );
+	console.log( 'api : ' + api );
 	// console.log( 'data : ' );
 	// console.log( data );
 
@@ -83,9 +92,9 @@ LunchNetwork.prototype.ajax = function( restType, api, data, callback ){
 		timeout: 5000,
 		success: function( result ){
 			if( typeof callback === "function" ){
-				callback( result );
+				callback( result.data );
 			}else{
-				returnValue = result;
+				returnValue = result.data;
 			}
 		},
 		error: function( request, textStatus, errorThrown ){
