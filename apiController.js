@@ -1,4 +1,5 @@
 var lunchManager = require('./modules/lunch.js');
+var testManager = require('./modules/test.js');
 var multer = require('multer');
 
 //upload module
@@ -16,6 +17,9 @@ var upload = multer({ storage: storage });
 
 module.exports.setApi = function( app )
 {
+	app.post(	'/api/test/login',					lunchManager.login );
+	app.post(	'/api/test/signup',					lunchManager.signup );
+
 	app.get(	'/api/restaurant/:num/:offset',		lunchManager.getRestaurantList );
 
 	app.get(	'/api/today/lunch/:num/:offset',	lunchManager.getTodayLunchList );
@@ -28,12 +32,12 @@ module.exports.setApi = function( app )
 
 	app.delete(	'/api/today/lunch',					lunchManager.deleteTodayLunch );
 
-	app.get(	'/api/test',						lunchManager.testGet );
-	app.put(	'/api/test',						lunchManager.testPut );
-	app.post(	'/api/test',						lunchManager.testPost );
-	app.delete(	'/api/test',						lunchManager.testDelete );
+	app.get(	'/api/test',						testManager.testGet );
+	app.put(	'/api/test',						testManager.testPut );
+	app.post(	'/api/test',						testManager.testPost );
+	app.delete(	'/api/test',						testManager.testDelete );
 
-	app.post(	'/api/test/db',						lunchManager.testDb );
+	app.post(	'/api/test/db',						testManager.testDb );	
 
 	console.log('setApi set...');
 };

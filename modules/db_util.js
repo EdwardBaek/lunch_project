@@ -1,5 +1,6 @@
 var pg = require('pg');
-var DB_CONNECTION_INFO = "postgres://postgres:1234@localhost/testdb";;
+var DB_CONNECTION_INFO = "postgres://postgres:1234@localhost/testdb";
+var async = require('async');
 
 var DBUtil = function DBUtil(){};
 DBUtil.prototype.connectDataBase = function connectDataBase( fnCallback ){
@@ -34,7 +35,42 @@ DBUtil.prototype.connectWithSingleQuery = function connectwithSingleQuery( query
 		}
 	);
 }
+/* query, queryParams, fnSeccessCallback, fnFailCallback */
+DBUtil.prototype.connectWithQueries = function connectWithQueries(){
+	// console.info( '\nDBUtil.connectWithQueries', arguments );	
+	var fnDbDone;
+	var fnDbClient;
+	var fnSuccessCallback = arguments[ arguments.length - 2 ];
+	var fnFailCallback = arguments[ arguments.length - 1 ];
+	var arFunctions = 
+	[
+		function connectDataBase(callback){
+			// console.info('_dbUtilInstance', _dbUtilInstance);
+			_dbUtilInstance.connectDataBase(
+				function(err, client, done){
+					fnDbDone = done;
+					fnDbClient = client;
+					callback(null, err, client, done);
+				}
+			);
+		}
+	];
+	for( var i = 0; i < arguments.length - 2; ++i)
+		arFunctions.push(arguments[i]);
+	async.waterfall(
+		arFunctions,
+		function waterfallEnd(err, result){
+			fnDbDone();
+			// console.info('waterfallEnd err : ', err);
 
+			if(err)
+				fnFailCallback(err);
+			else
+				fnSuccessCallback(result);
+		}
+	);
+
+};
 
 var _dbUtilInstance = new DBUtil();
 module.exports = _dbUtilInstance;
