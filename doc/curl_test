@@ -22,7 +22,7 @@ curl --request GET "http://localhost:3000/api/restaurant/a/0"
 TODO : 
 
 // 가입하기
-curl --request POST "http://localhost:3000/api/test/signup" -H "Content-type:application/json" -d '{"email":"email@gmail.com", "pw":"1234"}' -i
+curl --request POST "http://localhost:3000/api/signup" -H "Content-type:application/json" -d '{"email":"email@gmail.com", "password":"1234"}' -i
 
 // 로그인 토큰
-curl --request POST "http://localhost:3000/api/test/login" -H "Content-type:application/json" -d '{"email":"email@gmail.com", "pw":"1234", "token":""}' -i
+curl --request POST "http://localhost:3000/api/login" -H "Content-type:application/json" -H "Auth:144ref" -d '{"email":"email@gmail.com", "password":"1234"}' -i

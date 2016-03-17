@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title> Lunch Project - Restaurant List </title>
+	<link rel="stylesheet" href="/bower_components/bootstrap/dist/css/bootstrap.min.css">
+	<link rel="stylesheet" href="/bower_components/bootstrap/dist/css/bootstrap-theme.min.css">
+</head>
+<body>
+	<a class="btn btn-link btn-block" href="javascript:history.back()" role="button">Back</a>
+	<h1> Restaurant List </h1>
+	<!-- <button id="post"> post test </button> -->
+
+	<div id="sql">
+		
+	</div>
+	
+<script type="text/javascript" src="/bower_components/jquery/dist/jquery.js"></script>
+<script type="text/javascript" src="javascripts/LunchNetwork.js"></script>
+<script type="text/javascript" src="javascripts/HtmlHelper.js"></script>
+<script type="text/javascript">
+	var _lunchNetwork = new LunchNetwork();
+	var restaurantList = _lunchNetwork.getRestaurantList();
+
+	console.info( 'restaurantList', restaurantList );
+	var printSql = ''; 
+	var lastRow = restaurantList[ restaurantList.length -1 ];
+	printSql += 'INSERT INTO RESTAURANTS ( NAME,	IMG_URL, REG_DATE ) ';
+	printSql += ' VALUES( "' + lastRow.NAME + '", "' + lastRow.IMG_URL + '", "' + lastRow.REG_DATE + '" ) ' + '</br>';
+
+	for ( var restaurantIdx = restaurantList.length -2; -1< restaurantIdx; --restaurantIdx ){
+		console.log( restaurantList[ restaurantIdx ]);
+		var row = restaurantList[ restaurantIdx ];
+		printSql += ' ,( "' + row.NAME + '", "' + row.IMG_URL + '", "' + row.REG_DATE + '" ) ' + '</br>';
+	}
+	printSql += ';';
+
+	$('#sql').html( printSql );
+</script>
+
+</body>
+</html>

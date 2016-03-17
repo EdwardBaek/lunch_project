@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title> Lunch Project - Restaurant List </title>
+	<link rel="stylesheet" href="/bower_components/bootstrap/dist/css/bootstrap.min.css">
+	<link rel="stylesheet" href="/bower_components/bootstrap/dist/css/bootstrap-theme.min.css">
+	<style>
+		thead tr>td{
+			text-align: center;
+		}
+		tbody tr>td:not(tbody tr>td.title){
+			text-align: center;
+			height: 300px;
+		}
+		tbody tr>td img{
+			height: 300px;
+		}
+	</style>
+</head>
+<body>
+	<a class="btn btn-link btn-block" href="javascript:history.back()" role="button">Back</a>
+	<h1> Restaurant List </h1>
+	<!-- <button id="post"> post test </button> -->
+
+	<table class="table">
+		<thead>
+			<tr>
+				<td> <h4>식당이름 ( 선정날짜 )</h4> </td>
+			</tr>
+		</thead>
+		<tbody id="table">
+			<tr class="title">
+				<td>{name} ( {reg_date} )</td>
+			</tr>
+			<tr>
+				<td><img ng-src="{img_url}"></td>
+			</tr>
+			<tr>
+				<td></td>
+			</tr>
+		</tbody>
+	</table>
+	
+<script type="text/javascript" src="/bower_components/jquery/dist/jquery.js"></script>
+<script type="text/javascript" src="javascripts/LunchNetwork.js"></script>
+<script type="text/javascript" src="javascripts/HtmlHelper.js"></script>
+<script type="text/javascript">
+	var _lunchNetwork = new LunchNetwork();
+	var restaurantList = _lunchNetwork.getRestaurantList();
+
+	console.info( 'restaurantList', restaurantList );
+
+	var restaurantListTable = new HtmlHelper( '#table' );
+	restaurantListTable.writeHtml( restaurantList );
+</script>
+
+</body>
+</html>

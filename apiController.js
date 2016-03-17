@@ -17,8 +17,8 @@ var upload = multer({ storage: storage });
 
 module.exports.setApi = function( app )
 {
-	app.post(	'/api/test/login',					lunchManager.login );
-	app.post(	'/api/test/signup',					lunchManager.signup );
+	app.post(	'/api/login',						lunchManager.login );
+	app.post(	'/api/signup',						lunchManager.signup );
 
 	app.get(	'/api/restaurant/:num/:offset',		lunchManager.getRestaurantList );
 

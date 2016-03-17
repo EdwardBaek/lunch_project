@@ -4,7 +4,7 @@ var auth    = require("./auth.js");
 var util	= require("./util.js");
 
 var ServerError = function( errorCode, message ){
-	this.code = errorCode;
+	this.errorCode = errorCode;
 	this.message = message;
 };
 
@@ -148,39 +148,58 @@ module.exports.deleteTodayLunch = function deleteTodayLunch( req, res ){
 
 
 module.exports.login = function( req, res ){
-	var requestedToken = req.body.token;
+	var requestedToken = req.header("Auth");
 	var requestedEmail = req.body.email;
+	var requestedPassword = req.body.password;
+
+	console.info('requestedToken', requestedToken);
+	console.info('requestedToken', typeof requestedToken);
 
 	if( requestedToken !== undefined 
 		&& requestedToken !== null 
-		&& requestedToken !== ''
-		&& auth.isValidToken( requestedToken ) ){
-		if( auth.isValidTokenUser( requestedToken, requestedEmail ) ){
-			auth.reissueToken( requestedToken );
-			util.responseWithData( res, define.httpStatusCode.OK, { logintype : "token" });
+		&& requestedToken !== 'null' 
+		&& requestedToken !== '' ){
+		var isValidToken = auth.isValidToken( requestedToken );
+		console.info('isValidToken', isValidToken);		
+		if( isValidToken ){
+			if( auth.isValidTokenUser( requestedToken, requestedEmail ) ){
+				auth.reissueToken( requestedToken );
+				util.responseWithData( res, define.httpStatusCode.OK, { logintype : "token" });
+				return;
+			}else{
+				util.responseWithData( res, define.httpStatusCode.BAD_REQUEST, new ServerError(1817, 'Invalid Token User.'));
+				return;
+			}
+		}else{
+			util.responseWithData( res, define.httpStatusCode.BAD_REQUEST, new ServerError(1818, 'Invalid Token.'));
 			return;
 		}
 	}
 
-	console.info('token', requestedToken);
-	var requestedPw = req.body.pw;
 	//TODO: check value of params.
-
 	loginDbTask(
 		requestedToken,
 		requestedEmail,
-		requestedPw,
+		requestedPassword,
 		function success(result){
-			util.responseWithData( res, define.httpStatusCode.OK, result );
+			console.info('loginDbTask-success', result);
+			// util.responseWithData( res, define.httpStatusCode.OK, result );
+			var token = result.token;
+			var head =
+			{
+				"Content-Type" : "application/json",
+				"Auth" : token
+			};
+			util.responseWithHeadAndData( res, define.httpStatusCode.OK, head, result );
 		},
 		function fail(err){
+			console.info('loginDbTask-fail', err);
 			util.responseWithData( res, define.httpStatusCode.BAD_REQUEST, err );
 		}
 	);
 };
 
 function loginDbTask( token, email, password, fnSuccessCallback, fnFailCallback ){
-	var token;
 	var userData = {};
 	userData.token = token;
 	dbUtil.connectWithQueries(
@@ -211,7 +230,7 @@ function loginDbTask( token, email, password, fnSuccessCallback, fnFailCallback 
 		function checkUserData(result, callback){
 			console.log('checkUserData...');
 			if( result.password !== password )
-				return new ServerError(123, 'Invalid Password');
+				return callback(new ServerError(123, 'Invalid Password'));
 			callback(null);
 		},
 		function issueNewToken(callback){

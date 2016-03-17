@@ -1,0 +1,55 @@
+<!DOCTYPE>
+<html ng-app="app">
+<head>
+<!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+
+<!-- Optional theme -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.min.css">
+	<title>Contact List App</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+	<meta name="viewport" content="width=device-width, initial-scale=0.5, minimum-scale=0.1, maximum-scale=0.5"/>
+	<meta charset="UTF-8">
+</head>
+<body>
+	<div class="container" ng-controller="AppCtrl">
+		<h5>This page is running by Rasberry Pi2 at Edward's house </h5>
+		<h5>Rasbian(Linux 32bit) / Node.js / MongoDB / Angular.js</h5>
+		<h5>referenced from <a href="https://www.youtube.com/channel/UC8Szh5ZJeGFBWyqKyTCVPpA">Learn Coding Tutorial - Mean stack Restfull API</a></h5>
+		<h1>Contact List App</h1>
+		<table class="table">
+			<thead>
+				<tr>
+					<th>IDX</th>
+					<th>NAME</th>
+					<th>IMG_URL</th>
+					<th>Anctoin</th>
+					<th>&nbsp;</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td><input class="form-control" ng-model="newRestaurant.name" readonly></td>
+					<td><input class="form-control" ng-model="newRestaurant.NAME"></td>
+					<td><input class="form-control" ng-model="newRestaurant.IMG_URL"></td>
+					<td><button class="btn btn-primary" ng-click="addNewRestaurant()">Add Contact</button></td>
+					<td><button class="btn btn-info" ng-click="update()">Update</button>&nbsp;&nbsp;<button class="btn btn-info" ng-click="deselect()">Clear</button></td>
+				</tr>
+				<tr ng-repeat="restaurant in restaurantlist">
+					<td>{{restaurant.IDX}}</td>
+					<td>{{restaurant.NAME}}</td>
+					<td>{{restaurant.IMG_URL}}</td>
+					<td><button class="btn btn-danger" ng-click="remove(contact._id)">remove</button></td>
+					<td><button class="btn btn-warning" ng-click="edit(contact._id)">Edit</button></td>
+				</tr>
+			</tbody>
+		</table>
+	<a href="https://www.youtube.com/playlist?list=PLX2HoWE32I8Nkzw2TqcifObuhgJZz8a0U">참조</a>
+	</div>
+
+
+</body>
+<script src="libs/angular/angular.js"></script>
+<script src="javascripts/appController.js"></script>
+</html>

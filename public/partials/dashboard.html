@@ -1,0 +1,8 @@
+<div ng-show="hasToken()">
+	<p> hello {{ getTokenEmail() }}</p>
+	<button ng-show="hasToken()" ng-click="logOut()">logOut {{ getTokenEmail() }}</button>
+</div>
+<div ng-show="!hasToken()">
+	<p> Pleas, login.</p>
+	<a ng-click="goLoginPage()">Go to login page</a>
+</div>

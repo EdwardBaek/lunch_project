@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>sample</title>
+<script type="text/javascript" src="libs/jquery/jquery-2.1.1.min.js"></script>
+<script type="text/javascript" src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
+<script type="text/javascript" src="/libs/jQuery-File-Upload-9.11.2/js/jquery.fileupload.js"></script>
+<script type="text/javascript">
+$(document).ready(function() {
+    $('#upFile').fileupload({
+        url : '/api/file_upload', 
+        dataType: 'json',
+        //replaceFileInput: false,
+        add: function(e, data){
+            var uploadFile = data.files[0];
+            var isValid = true;
+            if (!(/png|jpe?g|gif/i).test(uploadFile.name)) {
+                alert('png, jpg, gif 만 가능합니다');
+                isValid = false;
+            } else if (uploadFile.size > 5000000) { // 5mb
+                alert('파일 용량은 5메가를 초과할 수 없습니다.');
+                isValid = false;
+            }
+            if (isValid) {
+                data.submit();              
+            } else {
+                alert('파일에 문제가 있거나 웹페이지에 업로드중 에러가 생겼습니다!');
+            }
+        }, progressall: function(e,data) {
+            var progress = parseInt(data.loaded / data.total * 100, 10);
+            $('#progress .bar').css(
+                'width',
+                progress + '%'
+            );
+        }, done: function (e, data) {
+            var code = data.result.code;
+            var msg = data.result.msg;
+            console.log( data );
+            if(code == '1') {
+                alert(msg);
+            } else {
+                alert(code + ' : ' + msg);
+            } 
+        }, fail: function(e, data){
+            console.log( data.errorThrown );
+            console.log( data.textStatus );
+            console.log( data.jqXHR );
+            console.log( e );
+            console.log( data );
+            alert('서버와 통신 중 문제가 발생했습니다');
+            foo = data;
+        }
+    });
+}); 
+
+</script>
+</head>
+<body>
+<input type="file" name="fileData" id="upFile">
+    <div id="progress">
+        <div class="bar" style="width: 0%;"></div>
+    </div>
+</body>
+</html>

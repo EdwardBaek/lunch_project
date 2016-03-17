@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title> Add New Restaurnat </title>
+	<link rel="stylesheet" href="/bower_components/bootstrap/dist/css/bootstrap.min.css">
+	<link rel="stylesheet" href="/bower_components/bootstrap/dist/css/bootstrap-theme.min.css">
+</head>
+<body>
+	<div class="container">
+		<h1> Add a New Restaurant </h1>
+		<!-- <button id="post"> post test </button> -->
+		<div>
+			<form name="newRetaurantForm" id="newRetaurantForm" action="/api/add_new_restaurant", method="post" enctype="multipart/form-data">
+				<!-- Live Preview -->
+				<fieldset calss="form-group">
+					<blockquote>
+					<b>식당이름과 위치 이미지를 올려주세요.</b></br>
+					<cite>*추후 이미지는 식당 이미지로, 위치는 지도 API를 사용으로 변경됩니다.</cite>
+					</blockquote>
+				</fieldset>
+				<h4>Submit a new restaurant</h4>
+				<fieldset calss="form-group">							
+					<input type="text" class="form-control" name="restaurantName" placeholder="Restaurant Name" title="restaurantName"/>
+				</fieldset>
+				<fieldset calss="form-group">							
+					<input type="file" name="uploadFile">
+				</fieldset>
+				<fieldset calss="form-group">							
+					<input onclick="add();" type="submit" class="btn btn-primary pull-right" value="Submit a New Restaurant"/>
+				</fieldset>
+			</form>
+		</div>
+	</div>
+	
+<script type="text/javascript" src="/bower_components/jquery/dist/jquery.js"></script>
+<script type="text/javascript" src="javascripts/LunchNetwork.js"></script>
+<script type="text/javascript">
+var _lunchNetwork = new LunchNetwork();
+
+/*
+function add(){
+	console.log( 'add' );
+	var form = $('#newRetaurantForm');
+	console.info('form', form);
+	var formData = new FormData(form);
+
+	var formData = new FormData();
+	formData.append("restaurantName", $("input[name=restaurantName]").val());
+	formData.append("files", $("input[name=uploadFile]")[0].files[0]);
+	console.info('res name: ', $("input[name=restaurantName]").val());
+	console.info('res file', $("input[name=uploadFile]")[0].files[0]);
+	console.info('formdata', formData);	
+
+	// TODO: FormData usase
+
+	var data = 
+	{
+		'restaurantName' : $("input[name=restaurantName]").val(),
+		'files' : $("input[name=uploadFile]")[0].files[0]
+	};
+	_lunchNetwork.insertRestaurant( data, function(){
+		
+	} );
+}
+*/
+
+// TODO: redirection
+</script>
+
+</body>
+</html>

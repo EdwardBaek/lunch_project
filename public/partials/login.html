@@ -1,0 +1,15 @@
+<div>
+	<ng-form name="login">
+		<div>
+			<label for="email">email</label>
+			<input type="text" ng-model="email">
+		</div>
+		<div>
+			<label for="password">password</label>
+			<input type="password" ng-model="password">
+		</div>
+		<button ng-click="submit()">submit</button>
+		<button ng-show="hasToken()" ng-click="autoLogin()">Auto login {{ getTokenEmail() }}</button>
+	</ng-form>
+	<p>{{ result }}</p>
+</div>

@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title> Lunch Project - Restaurant List </title>
+	<link rel="stylesheet" href="/bower_components/bootstrap/dist/css/bootstrap.min.css">
+	<link rel="stylesheet" href="/bower_components/bootstrap/dist/css/bootstrap-theme.min.css">
+</head>
+<body>
+	<a class="btn btn-link btn-block" href="javascript:history.back()" role="button">Back</a>
+	<h1> Restaurant List </h1>
+	<table class="table">
+		<thead>
+			<tr>
+				<td> <h4>식당날짜</h4> </td>
+				<td> <h4>식당이름</h4> </td>
+			</tr>
+		</thead>
+		<tbody id="restaurant_table">
+			<tr>
+				<td>{date}</span></td>
+				<td>{name}</span></td>
+			</tr>
+		</tbody>
+	</table>
+	
+<script type="text/javascript" src="/bower_components/jquery/dist/jquery.js"></script>
+<script type="text/javascript" src="javascripts/LunchNetwork.js"></script>
+<script type="text/javascript" src="javascripts/HtmlHelper.js"></script>
+<script type="text/javascript">
+	var _lunchNetwork = new LunchNetwork();
+	var restaurantList = _lunchNetwork.getSelectedLunchListAll();
+
+	console.info( 'restaurantList', restaurantList );
+
+	var restaurantListTable = new HtmlHelper( '#restaurant_table' );
+	restaurantListTable.writeHtml( restaurantList );
+</script>
+
+</body>
+</html>
