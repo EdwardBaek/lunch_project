@@ -1,5 +1,6 @@
 var pg = require('pg');
-var DB_CONNECTION_INFO = "postgres://postgres:1234@localhost/testdb";
+var devDefine = require('./dev.define.js');
+var DB_CONNECTION_INFO = devDefine.DB_CONNECTION_INFO;
 var async = require('async');
 
 var DBUtil = function DBUtil(){};

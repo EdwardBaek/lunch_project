@@ -1,0 +1,14 @@
+<input type="number" ng-model="inputNum" ng-maxlength="3">
+
+<button class="btn" ng-click="checkAnswer()">Check input</button>
+<span>{{ getWarningMessage() }}</span>
+<p ng-repeat="result in gameHistory">
+	<span ng-show="result[1]">
+		{{ result[0] }}회차 - {{ result[4] }} : OUT
+	</span>
+	<span ng-show="!result[1]">
+		{{ result[0] }}회차 - {{ result[4] }} : {{ result[2] }}S {{ result[3] }}B
+	</span>
+</p>		
+<p ng-show="isGameDone">{{ getGameDoneMessage() }}</p>
+<button class="btn" ng-show="isGameDone" ng-click="resetGame()">Reset Game</button>

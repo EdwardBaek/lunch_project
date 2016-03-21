@@ -8,7 +8,11 @@ angular.module('login',
 function LoginController($scope, $appData, $appNetwork, $state){
 	console.info('LoginController', 'loaded...');
 	console.info('network toekn', $appNetwork.getToken());
-
+	$scope.user = 
+	{
+		email : null,
+		password : null
+	};
 	$scope.hello = 'world';
 
 	$scope.hasToken = function(){
@@ -18,14 +22,11 @@ function LoginController($scope, $appData, $appNetwork, $state){
 		return ( $appData.getLocalStorage('email') );	
 	};
 
-	$scope.submit = function(){
-		// console.info('login form', $scope.login );
-		// console.info('email', $scope.email);
-		// console.info('password', $scope.password);
+	$scope.loginSubmit = function(){
 		var data = 
 		{
-			email : $scope.email,
-			password : $scope.password			
+			email : $scope.user.email,
+			password : $scope.user.password			
 		};
 		$appNetwork.post(
 			'/api/login/',
@@ -33,11 +34,12 @@ function LoginController($scope, $appData, $appNetwork, $state){
 			function success(response){
 				console.info('success.response',response);
 				$scope.result = response.data.message;
-				$appData.setLocalStorage('email', $scope.email);
+				$appData.setLocalStorage('email', $scope.user.email);
 				$appData.setLocalStorage('Auth', response.data.token);
 				$appNetwork.setToken(response.data.token);
 				$scope.resetFormData();
 
+				var redirectUrl = 'dashboard';
 				$state.go('dashboard');
 			},
 			function error(response){
@@ -51,7 +53,8 @@ function LoginController($scope, $appData, $appNetwork, $state){
 		var data = 
 		{
 			email : $appData.getLocalStorage('email'),
-			password : 00000000			
+			password : 00000000,
+			loginType : 'token'			
 		};
 		$appNetwork.post(
 			'/api/login/',
@@ -74,8 +77,8 @@ function LoginController($scope, $appData, $appNetwork, $state){
 	}
 
 	$scope.resetFormData = function(){
-		$scope.email = '';
-		$scope.password = '';
+		$scope.user.email = '';
+		$scope.user.password = '';
 	};
 	$scope.logOut = function(){
 		$appData.removeLocalStorage('email');

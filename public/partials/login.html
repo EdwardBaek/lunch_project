@@ -1,15 +1,14 @@
-<div>
-	<ng-form name="login">
-		<div>
-			<label for="email">email</label>
-			<input type="text" ng-model="email">
+<div class="m-b-lg">
+<form name="form">
+	<div class="list-group list-group-sm">
+		<div class="list-group-item">
+			<input type="email" placeholder="Email" class="form-control" ng-model="user.email" ng-required="true" required="required">
 		</div>
-		<div>
-			<label for="password">password</label>
-			<input type="password" ng-model="password">
+		<div class="list-group-item">
+			<input type="password" placeholder="Password" class="form-control" ng-model="user.password" ng-required="true" required="required">
 		</div>
-		<button ng-click="submit()">submit</button>
-		<button ng-show="hasToken()" ng-click="autoLogin()">Auto login {{ getTokenEmail() }}</button>
-	</ng-form>
-	<p>{{ result }}</p>
+	</div>
+	<button type="loginSubmit" class="btn btn-lg btn-success btn-block" ng-click="loginSubmit()" ng-disabled="form.$invalid" disabled="disabled">Login</button>
+	<button ng-show="getTokenEmail()" type="loginSubmit" class="btn btn-lg btn-success btn-block" ng-click="autoLogin()">Auto Login - {{ getTokenEmail() }}</button>
+</form>
 </div>

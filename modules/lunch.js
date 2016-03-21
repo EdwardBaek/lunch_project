@@ -151,14 +151,12 @@ module.exports.login = function( req, res ){
 	var requestedToken = req.header("Auth");
 	var requestedEmail = req.body.email;
 	var requestedPassword = req.body.password;
+	var loginType = req.body.loginType;
 
 	console.info('requestedToken', requestedToken);
 	console.info('requestedToken', typeof requestedToken);
 
-	if( requestedToken !== undefined 
-		&& requestedToken !== null 
-		&& requestedToken !== 'null' 
-		&& requestedToken !== '' ){
+	if( loginType === 'token'){
 		var isValidToken = auth.isValidToken( requestedToken );
 		console.info('isValidToken', isValidToken);		
 		if( isValidToken ){
@@ -254,7 +252,7 @@ function loginDbTask( token, email, password, fnSuccessCallback, fnFailCallback 
 
 module.exports.signup = function( req, res ){
 	var requestedEmail = req.body.email;
-	var requestedPw = req.body.pw;
+	var requestedPw = req.body.password;
 	//TODO: check value of params.
 
 	console.info('requestedEmail : ', requestedEmail);
@@ -282,7 +280,7 @@ var signupDbTask = function(email, password, fnSuccessCallback, fnFailCallback){
 				params,
 				function(err, result){
 					if(err)
-						return callback(new ServerError(1234, 'running query error.'));
+						return callback(new ServerError(1230, 'running query error.'));
 
 					if( 0 < result.rowCount )
 						return callback(new ServerError(1234, 'Already Used Email.'));

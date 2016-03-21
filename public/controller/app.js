@@ -3,8 +3,10 @@ var app = angular.module("app",
 		"ui.router",
     "app.data",
 
+    "signup",
     "login",
     "dashboard",
+    "game"
 	]
 )
 .config(['$stateProvider', '$urlRouterProvider',
@@ -14,10 +16,14 @@ var app = angular.module("app",
       	url : '/login',
         templateUrl: 'partials/login.html',
         controller: 'LoginController'
+      }).state('signup', {
+      	url : '/signup',
+        templateUrl: 'partials/signup.html',
+        controller: 'signupController'
       }).state('dashboard', {
-      	url : '/dashboard',
+        url : '/dashboard',
         templateUrl: 'partials/dashboard.html',
-        controller: 'DashboardController'
+        controller: 'DashboardController'  
       });
 
     $urlRouterProvider.otherwise('/login');
@@ -35,5 +41,10 @@ app.controller("MainController",
 function MainController($scope, $http, $appData){
 	console.info('MainController', 'loaded...');
   console.info('appData', $appData.getAllLocalStorage());
-
+  $scope.isAuthenticated = false;
+  console.info('isAuthenticated', $scope.isAuthenticated);
+  $scope.hasToken = function(){
+    return ( $appData.getLocalStorage('Auth') );
+  };
+  console.info('$scope.hasToken',$scope.hasToken());
 });

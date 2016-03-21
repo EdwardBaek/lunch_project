@@ -1,0 +1,21 @@
+<div>
+<div class="m-b-lg">
+<form name="form">
+	<div class="list-group list-group-sm">
+		<div class="list-group-item">
+			<input placeholder="Name" class="form-control" ng-model="user.name" ng-required="true">
+		</div>
+		<div class="list-group-item">
+			<input type="email" placeholder="Email" class="form-control" ng-model="user.email" ng-required="true" required="required">
+		</div>
+		<div class="list-group-item">
+			<input type="password" placeholder="Password" class="form-control" ng-model="user.password" ng-required="true" required="required">
+		</div>
+	</div>
+	<button type="signupSubmit" class="btn btn-lg btn-success btn-block" ng-click="signupSubmit()" ng-disabled="form.$invalid" disabled="disabled">Sign up</button>
+	
+	<p class="text-center"><small>Already have an account?</small></p>
+	<a ui-sref="login" class="btn btn-lg btn-default btn-block" href="/login">Sign in</a>
+</form>
+</div>
+</div>
