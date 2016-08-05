@@ -1,6 +1,8 @@
 /public/uploads
 /node_modules
 /public/bower_components
-/module/dev.define.js
+/modules/dev.define.js
 *.log
 
+#Mac Files
+.DS_Store
