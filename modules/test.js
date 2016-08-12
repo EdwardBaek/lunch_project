@@ -87,7 +87,7 @@ module.exports.testDb = function( req, res ){
 			{	
 				'data': 
 				{
-					'type' : 'put',
+					'type' : 'get',
 					'name' : req.body.name,
 					'data' : result.rows[0].number
 				}

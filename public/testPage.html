@@ -15,6 +15,7 @@
 		<a class="btn btn-link btn-block" onclick="testPost();" role="button">Test Post</a>
 		<a class="btn btn-link btn-block" onclick="testPut();" role="button">Test Put</a>
 		<a class="btn btn-link btn-block" onclick="testDelete();" role="button">Test Delete</a>
+		<a class="btn btn-link btn-block" onclick="testDb();" role="button">Test Db</a>
 	</div>
 	
 <script type="text/javascript" src="/bower_components/jquery/dist/jquery.js"></script>
@@ -53,6 +54,15 @@
 		_lunchNetwork.delete(
 			'test/',
 			{'name' : 'delete-method'},
+			function(result){
+				console.log(result);
+			}
+		);
+	}
+	function testDb(){
+		_lunchNetwork.get(
+			'test/db',
+			{'name' : 'get-method'},
 			function(result){
 				console.log(result);
 			}

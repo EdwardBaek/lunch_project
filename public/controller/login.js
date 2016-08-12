@@ -28,7 +28,7 @@ function LoginController($scope, $appData, $appNetwork, $state){
 			email : $scope.user.email,
 			password : $scope.user.password			
 		};
-		$appNetwork.post(
+		$appNetwork.put(
 			'/api/login/',
 			data,
 			function success(response){
@@ -56,7 +56,7 @@ function LoginController($scope, $appData, $appNetwork, $state){
 			password : 00000000,
 			loginType : 'token'			
 		};
-		$appNetwork.post(
+		$appNetwork.put(
 			'/api/login/',
 			data,
 			function success(response){

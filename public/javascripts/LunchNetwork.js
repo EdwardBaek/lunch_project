@@ -40,7 +40,7 @@ LunchNetwork.prototype.insertTodayLunch = function( data ){
 	var api = 'today/lunch';
 	var data = data ;
 	var callback = '';
-	return this.put( api, data, callback );
+	return this.post( api, data, callback );
 };
 
 LunchNetwork.prototype.insertRestaurant = function( data, callback ){
