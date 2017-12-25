@@ -1,0 +1,24 @@
+<div>
+	<h1>List</h1>
+	<table class="table">
+		<thead>
+			<tr>
+				<th>DATE</th>
+				<th>NAME</th>
+				<th>IMAGE</th>
+				<th>Anctoin</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr ng-repeat="restaurant in restaurants">
+				<td>{{restaurant.date}}</td>
+				<td>{{restaurant.id}}</td>
+				<td>{{restaurant.name}}</td>
+				<!-- <td>{{restaurant.img_url}}</td> -->
+				<td>
+					<img style="width:150px" ng-src="{{restaurant.img_url}}" name="uploadFile">
+				</td>
+			</tr>
+		</tbody>
+	</table>
+</div>

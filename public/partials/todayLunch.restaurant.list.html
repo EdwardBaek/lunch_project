@@ -1,0 +1,24 @@
+<div class="container">
+	<h1>List</h1>
+	<table class="table">
+		<thead>
+			<tr>
+				<th>IDX</th>
+				<th>NAME</th>
+				<th>IMAGE</th>
+				<th>Anctoin</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr ng-repeat="restaurant in restaurants">
+				<td>{{restaurant.id}}</td>
+				<td>{{restaurant.name}}</td>
+				<!-- <td>{{restaurant.img_url}}</td> -->
+				<td>
+					<img style="width:150px" ng-src="{{restaurant.img_url}}" name="uploadFile">
+				</td>
+				<td><button class="btn btn-danger" ng-click="deleteRetaurant(restaurant, $index)">Delete</button></td>
+			</tr>
+		</tbody>
+	</table>
+</div>

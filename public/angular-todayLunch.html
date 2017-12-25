@@ -15,25 +15,35 @@
 <body>
 	<div class="container" ng-controller="appController">
 		<h5>Environment: Node.js / PostGresSql / Angular.js</h5>
+		<h1>Selected</h1>
+
+		<div style="min-height:300px;border: 1px">
+			<p>{{ todayRestaurant.name }}</p>
+			<p>
+				<img style="width:150px" ng-src="{{todayRestaurant.img_url}}" name="uploadFile">
+			</p>
+			<p>{{ todayRestaurant.location }}</p>
+			<p>{{ todayRestaurant.decription }}</p>
+		</div>
+
 		<h1>List</h1>
 		<table class="table">
 			<thead>
 				<tr>
-					<th>IDX</th>
 					<th>NAME</th>
 					<th>IMAGE</th>
-					<th>Anctoin</th>
+					<th>LOCATION</th>
+					<th>DESCRIPTION</th>
 				</tr>
 			</thead>
 			<tbody>
 				<tr ng-repeat="restaurant in restaurants">
-					<td>{{restaurant.id}}</td>
 					<td>{{restaurant.name}}</td>
-					<!-- <td>{{restaurant.img_url}}</td> -->
 					<td>
 						<img style="width:150px" ng-src="{{restaurant.img_url}}" name="uploadFile">
 					</td>
-					<td><button class="btn btn-danger" ng-click="deleteRetaurant(restaurant.id)">Delete</button></td>
+					<td></td>
+					<td></td>
 				</tr>
 			</tbody>
 		</table>
@@ -45,5 +55,5 @@
 <script type="text/javascript" src="/bower_components/angular-file-upload/dist/angular-file-upload.min.js"></script>
 <script type="text/javascript" src="/controller/app.data.js"></script>
 <script type="text/javascript" src="/controller/app.network.js"></script>
-<script type="text/javascript" src="javascripts/appController.js"></script>
+<script type="text/javascript" src="/javascripts/appControllerNewRestaurant.js"></script>
 </html>

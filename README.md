@@ -10,9 +10,15 @@ One day, One choose.
 
 
 # Useage Tech
-Node.js
-Express
-Javascript
+Server
+-Node.js
+-Express
+
+DataBase
+-PostgresSql
+
+FrontEnd
+-Angular 1.0
 
 # First Setup
 When you setup this project in the first time, you need to make a file below
@@ -23,4 +29,5 @@ var dev_define =
 {
 	DB_CONNECTION_INFO : "postgres://userId:password@dbip/dbname"
 }
+module.exports = dev_define;
 ```

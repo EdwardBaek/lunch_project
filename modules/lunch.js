@@ -39,6 +39,296 @@ module.exports.getRestaurantList = function( req, res ){
 	);
 }
 
+module.exports.getRandomRestaurantList = function( req, res ){
+	console.log('getRandomRestaurantList');
+	var query = '' 
+		 + 'SELECT id, name, img_url, reg_date '
+		 + '  FROM t_restaurant_list'
+		 + ' ORDER BY random() ' 
+		 + ' LIMIT $1 '
+		 ;
+	var nLimitNum = req.params.num;
+	if( !nLimitNum || nLimitNum > 21){
+		nLimitNum = 20; //default and maximum
+	}
+	var params = [nLimitNum];
+	console.info('query:', query);
+	console.info('nLimitNum:', params);
+
+	dbUtil.connectWithSingleQuery(
+		query,
+		[nLimitNum],
+		function success(err, result){
+			// console.log(result.rows);
+			res.json( {'data':result.rows} );
+		},
+		function fail(err, result){
+			console.log('err' + err);
+		}
+	);
+}
+
+module.exports.getRandomRestaurantListWithRecentTodayLunch = function( req, res ){
+	console.log('getRandomRestaurantList');
+
+	var returnData = 
+	{
+		randomRestaurantList : {},
+		recentTodayList : {},
+	};
+	dbUtil.connectWithQueries(
+		function getRandomRestaurantList(err, client, done, callback){
+			console.log('getRandomRestaurantList...');
+			
+			var query = '' 
+				 + 'SELECT id, name, img_url, reg_date '
+				 + '  FROM t_restaurant_list'
+				 + ' ORDER BY random() ' 
+				 + ' LIMIT $1 '
+				 ;
+			var nLimitNum = req.params.num;
+			if( !nLimitNum || nLimitNum > 21){
+				nLimitNum = 20; //default and maximum
+			}
+			var params = [nLimitNum];
+			console.info('query:', query);
+			console.info('nLimitNum:', params);
+			client.query(
+				query,
+				params,
+				function(err, result){
+					if(err)
+						return callback(new ServerError(123, 'query error'));
+					// if( result.rowCount < 1)
+					// 	return callback(new ServerError(1234, 'Invalid Email.'));
+
+					console.info('result:', result);
+					callback(null, result, client, done);
+					returnData.randomRestaurantList = result.rows;
+					console.info('returnData.randomRestaurantList:', returnData.randomRestaurantList);
+				}
+			);
+		},
+		function getRecentTodayList(result, client, done, callback){
+			console.log('getRecentTodayList...');
+			var query = ''  
+				 + 'SELECT trl.id, trl.name, trl.img_url, tlt.date '
+				 + '  FROM t_lunch_today tlt,'
+				 + ' 	   t_restaurant_list trl '
+				 + ' WHERE tlt.restaurant_id = trl.id '
+				 + ' ORDER BY tlt.date desc' 
+				 + ' LIMIT $1 OFFSET $2'
+				 ;
+			var nLimitNum = Number(5);
+			var nOffsetNum = Number(0);
+			var params = 
+			[ 
+				nLimitNum,
+				nOffsetNum
+			];
+
+			console.info('query', query);
+			console.info('params', params);
+			
+			client.query(
+				query,
+				params,
+				function(err, result){
+					if(err)
+						return callback(new ServerError(1234, 'Internal Server Error.'));
+
+					console.info('getRecentTodayList result:', result);
+					console.info('returnData.recentTodayList:', returnData.recentTodayList);
+					returnData.recentTodayList = result.rows;
+					callback(null, result);
+				}
+			);
+		},
+		function getRandomTodayRestaurant(result, callback){
+			console.log("sd");
+			callback(null, result);
+		},
+		function success(result){
+			util.responseWithData( res, define.httpStatusCode.OK, {data:returnData} );
+		},
+		function fail(error){
+			util.responseWithData( res, define.httpStatusCode.BAD_REQUEST, error );
+		}
+	);
+}
+
+module.exports.getNewTodayRestaurantWithSaving = function( req, res ){
+	console.log('getNewTodayRestaurantWithSaving');
+
+	var hasTodayRestaurant = false;
+	dbUtil.connectWithQueries(
+		function getTodayRestaurant(err, client, done, callback){
+			console.log('getTodayRestaurant...');
+			var query = ''  
+				 + 'SELECT trl.id, trl.name, trl.img_url, tlt.date '
+				 + '  FROM t_lunch_today tlt,'
+				 + ' 	   t_restaurant_list trl '
+				 + ' WHERE tlt.restaurant_id = trl.id '
+				 + ' 		AND tlt.date = now()::date' 
+				 ;
+			console.info('query :\n ', query);
+			
+			client.query(
+				query,
+				[],
+				function(err, result){
+					if(err)
+						return callback(new ServerError(123, 'query error'));
+					// if( result.rowCount < 1)
+					// 	return callback(new ServerError(1234, 'Invalid Email.'));
+
+					if( result.rows.length > 0)
+						hasTodayRestaurant = true;
+					console.info('result :\n', result);
+					console.info('hasTodayRestaurant :\n', hasTodayRestaurant);
+					
+					callback(null, result.rows[0], client, done);
+				}
+			);
+		},
+		function getRandomRestaurant(result, client, done, callback){
+			if( hasTodayRestaurant){
+				callback(null, result);
+			}else{
+				console.log('getRandomRestaurant...');
+					var query = '' 
+					 + 'WITH today_lunch AS ( '
+					 + 'SELECT id  '
+					 + '  FROM ( '
+					 + '	SELECT id FROM t_restaurant_list '
+					 + '	EXCEPT '
+					 + '	SELECT restaurant_id  '
+					 + '		FROM (  '
+					 + '				SELECT restaurant_id ' 
+					 + '				FROM t_lunch_today  '
+					 + '				ORDER BY date desc  '
+					 + '				LIMIT 5  '
+					 + '			) as limited_tlt '
+					 + '	) AS candidate_t '
+					 + ' ORDER BY random() '
+					 + ' LIMIT 1 '
+					 + '), reset_today_lunch AS ( '
+					 + 'DELETE FROM t_lunch_today '
+					 + 'WHERE date = now()::date '
+					 + '), insert_value_table AS ('
+					 + 'INSERT INTO t_lunch_today(restaurant_id) ' 
+					 + '	SELECT today_lunch.id  '
+					 + '	  FROM today_lunch  '
+					 + '	RETURNING * '
+					 + ')	 '
+					 + 'SELECT trl.*	 '
+					 + '  FROM insert_value_table tlt,	 '
+					 + '		 t_restaurant_list trl'
+					 + ' WHERE trl.id = tlt.restaurant_id	 '
+					 + '	 '
+					 ;
+
+				console.info('query:', query);
+				client.query(
+					query,
+					[],
+					function(err, result){
+						if(err)
+							return callback(new ServerError(1234, 'Internal Server Error.'));
+
+						console.info('getRecentTodayList result:', result);
+						callback(null, result.rows[0]);
+					}
+				);
+			}
+		},
+		function getRandomTodayRestaurant(result, callback){
+			console.log("sd");
+			callback(null, result);
+		},
+		function success(result){
+			util.responseWithData( res, define.httpStatusCode.OK, {data:result} );
+		},
+		function fail(error){
+			util.responseWithData( res, define.httpStatusCode.BAD_REQUEST, error );
+		}
+	);
+}
+
+module.exports.getNewTodayRestaurantWithSavingReset = function( req, res ){
+	console.log('getNewTodayRestaurantWithSavingReset');
+
+	var query = '' 
+		 + 'WITH today_lunch AS ( '
+		 + 'SELECT id  '
+		 + '  FROM ( '
+		 + '	SELECT id FROM t_restaurant_list '
+		 + '	EXCEPT '
+		 + '	SELECT restaurant_id  '
+		 + '		FROM (  '
+		 + '				SELECT restaurant_id ' 
+		 + '				FROM t_lunch_today  '
+		 + '				ORDER BY date desc  '
+		 + '				LIMIT 5  '
+		 + '			) as limited_tlt '
+		 + '	) AS candidate_t '
+		 + ' ORDER BY random() '
+		 + ' LIMIT 1 '
+		 + '), reset_today_lunch AS ( '
+		 + 'DELETE FROM t_lunch_today '
+		 + 'WHERE date = now()::date '
+		 + '), insert_value_table AS ('
+		 + 'INSERT INTO t_lunch_today(restaurant_id) ' 
+		 + '	SELECT today_lunch.id  '
+		 + '	  FROM today_lunch  '
+		 + '	RETURNING * '
+		 + ')	 '
+		 + 'SELECT trl.*	 '
+		 + '  FROM insert_value_table tlt,	 '
+		 + '		 t_restaurant_list trl'
+		 + ' WHERE trl.id = tlt.restaurant_id	 '
+		 + '	 '
+		 ;
+ 		
+	console.info('query:\n', query);
+	dbUtil.connectWithSingleQuery(
+		query,
+		[],
+		function success(err, result){
+			// console.log(result.rows);
+			res.json( {'data':result.rows[0]} );
+		},
+		function fail(err, result){
+			console.log('err' + err);
+		}
+	);
+}
+
+module.exports.getRandomTodayLunch = function( req, res ){
+	console.log('getRandomRestaurantList');
+
+	var query = ''  
+		 + 'SELECT trl.id, trl.name, trl.img_url, tlt.date '
+		 + '  FROM t_lunch_today tlt,'
+		 + ' 	   t_restaurant_list trl '
+		 + ' WHERE tlt.restaurant_id = trl.id '
+		 + ' ORDER BY random() ' 
+		 + ' LIMIT 1 '
+
+	console.info('query:', query);
+	dbUtil.connectWithSingleQuery(
+		query,
+		[],
+		function success(err, result){
+			// console.log(result.rows);
+			res.json( {'data':result.rows} );
+		},
+		function fail(err, result){
+			console.log('err' + err);
+		}
+	);
+}
+
 module.exports.getTodayLunchList = function( req, res ){
 	console.log('getTodayLunchList');
 	var query = ''  
@@ -72,14 +362,23 @@ module.exports.addNewRestaurant = function( req, res ){
     var publicImagePath = '/images/';
     var uploadsPath = '/uploads/';
     var restaurantName = req.body.restaurantName;
+    console.log("------");
+    console.log("req:");
+    console.dir(req ,{depth:1})
+    console.log("------");
 
     if( req.file ){
         var fileName = req.file.filename;
+	    console.log("req:" + req.file.filename );
+	    console.log("req:" + req.file );
         var imgUrl = uploadsPath + fileName ;
     }else{
         var fileName = 'no_restaurant_image.png';
         var imgUrl = publicImagePath + fileName ;
     }
+
+    console.log("req.body.restaurantName:" + req.body.restaurantName );
+    console.log("req.file.filename:" + req.file.filename );
 
     var query = ''
               + ' INSERT INTO '
@@ -141,6 +440,31 @@ module.exports.deleteTodayLunch = function deleteTodayLunch( req, res ){
 		},
 		function fail(err, result){
 			console.info('deleteTodayLunch', err);
+			res.json({'data':'not ok'});
+		}
+	);
+};
+
+module.exports.deleteRestaurant = function deleteRestaurant( req, res ){
+	var restaurantId = req.params.id;
+	console.log("deleteRestaurant restaurantId:", req.body.id + "/" + req.params.id)
+	if(!restaurantId)
+		restaurantId = 0;
+
+	var query = 'DELETE FROM t_restaurant_list'
+			  + ' WHERE id = $1 '
+			  + ''
+			  + ''
+			  + '';
+	dbUtil.connectWithSingleQuery(
+		query,
+		[restaurantId],
+		function success(err, result){
+			console.log('deleteRestaurant susseed');
+			res.json({'data': restaurantId + ' is deleted ok'});
+		},
+		function fail(err, result){
+			console.info('deleteRestaurant', err);
 			res.json({'data':'not ok'});
 		}
 	);

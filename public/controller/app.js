@@ -6,7 +6,8 @@ var app = angular.module("app",
     "signup",
     "login",
     "dashboard",
-    "game"
+    "todayLunch",
+    "game",
 	]
 )
 .config(['$stateProvider', '$urlRouterProvider',
@@ -24,7 +25,8 @@ var app = angular.module("app",
         url : '/dashboard',
         templateUrl: 'partials/dashboard.html',
         controller: 'DashboardController'  
-      });
+      })
+      ;
 
     $urlRouterProvider.otherwise('/login');
   }]

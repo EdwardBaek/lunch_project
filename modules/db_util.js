@@ -1,6 +1,7 @@
 var pg = require('pg');
 var devDefine = require('./dev.define.js');
 var DB_CONNECTION_INFO = devDefine.DB_CONNECTION_INFO;
+console.log("DB_CONNECTION_INFO",DB_CONNECTION_INFO);
 var async = require('async');
 
 var DBUtil = function DBUtil(){};

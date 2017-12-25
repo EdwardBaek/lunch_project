@@ -1,0 +1,33 @@
+<button type="button" class="btn btn-success btn-xs" ng-click="getTodayWithReset()" ">
+	<span class="glyphicon glyphicon-upload"></span> Reset
+</button>
+<div style="min-height:300px;border: 1px">
+	<p>{{ todayRestaurant.name }}</p>
+	<p>
+		<img style="width:150px" ng-src="{{todayRestaurant.img_url}}" name="uploadFile">
+	</p>
+	<p>{{ todayRestaurant.location }}</p>
+	<p>{{ todayRestaurant.decription }}</p>
+</div>
+
+<!-- <h2>List</h2>
+<table class="table">
+	<thead>
+		<tr>
+			<th>NAME</th>
+			<th>IMAGE</th>
+			<th>LOCATION</th>
+			<th>DESCRIPTION</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr ng-repeat="restaurant in restaurants">
+			<td>{{restaurant.name}}</td>
+			<td>
+				<img style="width:150px" ng-src="{{restaurant.img_url}}" name="uploadFile">
+			</td>
+			<td></td>
+			<td></td>
+		</tr>
+	</tbody>
+</table> -->

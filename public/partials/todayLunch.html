@@ -1,0 +1,9 @@
+<h3>today lunch</h3>
+<h5>Environment: Node.js / PostGresSql / Angular.js</h5>
+<nav>
+	| <a ui-sref="todayLunch.today.main" ng-class="{ active : $state.includes('todayLunch.today.main')}">Today!!</a>
+	| <a ui-sref="todayLunch.today.list" ng-class="{ active : $state.includes('todayLunch.today.list') }">Selected Today List</a> 	
+	| <a ui-sref="todayLunch.restaurant.list" ng-class="{ active : $state.includes('todayLunch.restaurant.list') }">Restaurant List</a> 
+	| <a ui-sref="todayLunch.restaurant.new" ng-class="{ active : $state.includes('todayLunch.restaurant.new') }">Add New Restaurant</a> 
+</nav>
+<div ui-view></div>

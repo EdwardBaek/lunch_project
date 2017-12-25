@@ -3,6 +3,8 @@
 /public/bower_components
 /modules/dev.define.js
 *.log
+/public/test
+/test
 
 #Mac Files
 .DS_Store

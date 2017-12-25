@@ -1,7 +1,7 @@
-<html ng-app="app">
+<html ng-app="app"><!-- id="ng-app" IE<8 -->
 <head>
 	<meta charset="UTF-8">
-	<title>login page</title>
+	<title>Edwards Play Ground</title>
 	<link rel="stylesheet" href="/bower_components/bootstrap/dist/css/bootstrap.min.css">
 	<link rel="stylesheet" href="/bower_components/bootstrap/dist/css/bootstrap-theme.min.css">
 	<style>
@@ -17,6 +17,7 @@
 		| <a ui-sref="signup" ng-class="{ active : $state.includes('signup') }">signup</a> 
 		| <a ui-sref="login" ng-class="{ active : $state.includes('login') }">login</a> 	
 		| <a ui-sref="dashboard" ng-class="{ active : $state.includes('dashboard')}">dashboard</a>
+		| <a ui-sref="todayLunch.today.main" ng-class="{ active : $state.includes('todayLunch')}">todayLunch</a>
 		| <a ui-sref="game.list" ng-class="{ active : $state.includes('game')}">game</a>|		
 	</nav>
 	<div ui-view></div>
@@ -25,11 +26,14 @@
 <script type="text/javascript" src="/bower_components/jquery/dist/jquery.js"></script>
 <script type="text/javascript" src="/bower_components/angular/angular.min.js"></script>
 <script type="text/javascript" src="/bower_components/angular-ui-router/release/angular-ui-router.min.js"></script>
+<script type="text/javascript" src="/bower_components/angular-file-upload/dist/angular-file-upload.min.js"></script>
+
 <script type="text/javascript" src="/controller/app.data.js"></script>
 <script type="text/javascript" src="/controller/app.network.js"></script>
 <script type="text/javascript" src="/controller/signup.js"></script>
 <script type="text/javascript" src="/controller/login.js"></script>
 <script type="text/javascript" src="/controller/dashboard.js"></script>
 <script type="text/javascript" src="/controller/game.js"></script>
+<script type="text/javascript" src="/controller/lunch.js"></script>
 <script type="text/javascript" src="/controller/app.js"></script>
 </html>

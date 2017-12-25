@@ -21,12 +21,12 @@ angular.module('game',
 			template : '<div ui-view></div>'
 		})
 		.state('game.bullsAndCows.play', {
-			url : '/bullsAndCows',
+			url : '/play',
 			templateUrl : '/partials/game.bullsAndCows.html',
 			controller : 'bullsAndCowsController'
 		})
 		.state('game.bullsAndCows.score', {
-			url : '/bullsAndCows/score',
+			url : '/score',
 			templateUrl : '/partials/game.bullsAndCows.score.html',
 			controller : 'bullsAndCowsScoreController'
 		})
